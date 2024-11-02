@@ -1,31 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 16:03:59 by marvin            #+#    #+#             */
-/*   Updated: 2024/11/01 16:03:59 by marvin           ###   ########.fr       */
+/*   Created: 2024/11/02 13:45:46 by marvin            #+#    #+#             */
+/*   Updated: 2024/11/02 13:45:46 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 //#include "libft.h"
 
-void *memset(void *s, int c, size_t n);
-
-void	*ft_calloc(size_t nmemb, size_t size)
+char	*ft_strdup(const char *s)
 {
-	void	*ptr;
+	char *dst;
+	size_t len;
+	int i;
 
-	if(nmemb == 0 || size == 0)
+	len = ft_strlen(s) + 1;
+	dst = (char *)malloc(len * sizeof(char));
+	if (dst == NULL)
+		return (NULL);
+	i = 0;
+	while (s[i])
 	{
-		nmemb = 1;
-		size = 1;
+		dst[i] = s[i];
+		i++;
 	}
-	ptr = malloc(nmemb * size);
-	if (ptr != NULL)
-		memset(ptr, 0, nmemb * size);
-	return (ptr);
+	dst[i] = 0;
+	return (dst);
 }
