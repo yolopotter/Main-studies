@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 10:36:38 by vlopatin          #+#    #+#             */
-/*   Updated: 2024/11/18 16:20:38 by vlopatin         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:24:14 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdio.h> //printf
 #include <fcntl.h> //open
 
-#define BUFFER_SIZE 2
+#define BUFFER_SIZE 5
 
 size_t	ft_strlen(const char *str)
 {
@@ -28,6 +28,24 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+	size_t	src_size;
+
+	src_size = ft_strlen(src);
+	if (size == 0)
+		return (src_size);
+	i = 0;
+	while (src[i] && i < size - 1)
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (src_size);
+}
+
 void	ft_strlcat(char *dest, const char *src, size_t size)
 {
 	size_t	dest_len;
@@ -37,12 +55,12 @@ void	ft_strlcat(char *dest, const char *src, size_t size)
 	while (dest[dest_len])
 		dest_len++;
 	i = 0;
-	while (src[i] && i < size - 1)
+	while (src[i] && dest_len + i < size - 1)
 	{
 		dest[i + dest_len] = src[i];
 		i++;
 	}
-	dest[i] = '\0';
+	dest[i + dest_len] = '\0';
 }
 
 char	*ft_strndup(const char *s, int len)
@@ -65,26 +83,50 @@ char	*ft_strndup(const char *s, int len)
 	return (dst);
 }
 
-char	*create_line(char *buffer, char *line, int i)
+char	*create_line(char *line, char *buffer, int i)
 {
+	char	*dst;
+
 	if (line == NULL)
-		line = ft_strndup(buffer, i + 1);
-	else
 	{
-		char *temp;
-		temp = line;
-		line = malloc (ft_strlen(line) + i + 1);
-		if (!line)
-		{
-			free (buffer);
-			return (NULL);
-		}
-		strcpy(line, temp);
-		strncat(line, buffer, i + 1);
-		free(temp);
+		line = ft_strndup(buffer, i + 1);
+		return (line);
 	}
-	free(buffer);
-	return (line);
+	dst = (char *)malloc(ft_strlen(line) + i + 1);
+	if (!dst)
+		return (NULL);
+	ft_strlcpy(dst, line, ft_strlen(line) + 1);
+	ft_strlcat(dst, buffer, ft_strlen(line) + i + 1);
+	return (dst);
+}
+
+char	*use_remainder(char **str_s)
+{
+	int		i;
+	char	*line;
+	char	*temp;
+
+	if(*str_s)
+	{
+		i = 0;
+		while ((*str_s)[i] && (*str_s)[i] != '\n')
+			i++;
+		line = ft_strndup(*str_s, i + 1);
+		if ((*str_s)[i] != '\0')
+		{
+			temp = ft_strndup(*str_s + i + 1, BUFFER_SIZE);
+			free(*str_s);
+			*str_s = temp;
+			return (line);
+		}
+		else
+		{
+			free(*str_s);
+			*str_s = NULL;
+			return (line);
+		}
+	}
+	return (NULL);
 }
 
 char *get_next_line(int fd)
@@ -100,37 +142,23 @@ char *get_next_line(int fd)
 	if (!buffer)
 		return (NULL);
 	i = 0;
-	if (str_s)
-	{
-		while (str_s[i] && str_s[i] != '\n')
-			i++;
-		line = ft_strndup(str_s, i + 1);
-		if (str_s[i] != '\0')
-		{
-			str_s = ft_strndup(&str_s[i + 1], BUFFER_SIZE);
-			return (line);
-		}
-		else
-		{
-			free(str_s);
-			str_s = NULL;
-		}
-	}
-	i = 0;
+	line = use_remainder(&str_s);
+	if(!str_s)
+		return (line);
 	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
+		i = 0;
 		buffer[bytes_read] = '\0';
 		while (buffer[i])
 		{
 			if (buffer[i] == '\n')
 			{
 				str_s = ft_strndup(&buffer[i + 1], BUFFER_SIZE);
-				return (create_line(buffer, line, i));
+				return (create_line(line, buffer, i + 1));
 			}
 			i++;
 		}
-		str_s = ft_strndup(&buffer[i + 1], BUFFER_SIZE);
-		line = create_line(buffer, line, i);
+		line = create_line(line, buffer, i);
 	}
 	free (buffer);
 	return (NULL);

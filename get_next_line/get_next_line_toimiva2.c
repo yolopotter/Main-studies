@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_toimiva.c                            :+:      :+:    :+:   */
+/*   get_next_line_toimiva2.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 10:36:38 by vlopatin          #+#    #+#             */
-/*   Updated: 2024/11/19 14:14:57 by vlopatin         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:33:01 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdio.h> //printf
 #include <fcntl.h> //open
 
-#define BUFFER_SIZE 3
+#define BUFFER_SIZE 6
 
 size_t	ft_strlen(const char *str)
 {
@@ -100,35 +100,30 @@ char	*create_line(char *line, char *buffer, int i)
 	return (dst);
 }
 
-char *get_next_line(int fd)
+char	*fill_line(int fd, char **str_s, char *buffer)
 {
-	int bytes_read;
-	char *buffer;
 	char *line;
-	static char *str_s;
 	int i;
+	ssize_t bytes_read;
 
 	line = NULL;
-	buffer = malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return (NULL);
 	i = 0;
-	if (str_s)
+	if (*str_s)
 	{
-		while (str_s[i] && str_s[i] != '\n')
+		while ((*str_s)[i] && (*str_s)[i] != '\n')
 			i++;
-		line = ft_strndup(str_s, i + 1);
-		if (str_s[i] != '\0')
+		line = ft_strndup(*str_s, i + 1);
+		if ((*str_s)[i] != '\0')
 		{
-			char *temp = ft_strndup(&str_s[i + 1], BUFFER_SIZE);
-			free(str_s);
-			str_s = temp;
+			char *temp = ft_strndup(&(*str_s)[i + 1], BUFFER_SIZE);
+			free(*str_s);
+			*str_s = temp;
 			return (line);
 		}
 		else
 		{
-			free(str_s);
-			str_s = NULL;
+			free(*str_s);
+			*str_s = NULL;
 		}
 	}
 	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
@@ -139,21 +134,48 @@ char *get_next_line(int fd)
 		{
 			if (buffer[i] == '\n')
 			{
-				str_s = ft_strndup(&buffer[i + 1], BUFFER_SIZE);
+				*str_s = ft_strndup(&buffer[i + 1], BUFFER_SIZE);
 				return (create_line(line, buffer, i + 1));
 			}
 			i++;
 		}
 		line = create_line(line, buffer, i);
 	}
+	return(NULL);
+}
+
+char *get_next_line(int fd)
+{
+	char *buffer;
+	char *line;
+	static char *str_s;
+
+	line = NULL;
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	{
+		free(str_s);
+		free(buffer);
+		str_s = NULL;
+		buffer = NULL;
+		return (NULL);
+	}
+	if (!buffer)
+		return (NULL);
+
+	line = fill_line(fd, &str_s, buffer);
+
 	free (buffer);
-	return (NULL);
+	buffer = NULL;
+	if (!line)
+		return (NULL);
+	return (line);
 }
 
 int main()
 {
 	char *path;
-	char *line;
+	char *str;
 	int i;
 	int fd;
 
@@ -162,10 +184,10 @@ int main()
 	i = 0;
 	while (i < 6)
 	{
-		line = get_next_line(fd);
+		str = get_next_line(fd);
 		printf("i: %i\n", i);
-		printf("fd: %i, content: %s\n", fd, line);
-		free(line);
+		printf("fd: %i, content: %s\n", fd, str);
+		free(str);
 		i++;
 	}
 	return 0;
