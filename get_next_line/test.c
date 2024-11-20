@@ -1,67 +1,208 @@
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+#include <unistd.h> //read
+#include <stdlib.h> //malloc, size_t
+#include <string.h> //strdup
+#include <stdio.h> //printf
+#include <fcntl.h> //open
 
-void	fill_str(char *dst, const char *s1, const char *s2)
+#define BUFFER_SIZE 3
+
+static char    *_fill_line_buffer(int fd, char *left_c, char *buffer);
+static char    *_set_line(char *line);
+static char    *ft_strchr(char *s, int c);
+char    *get_next_line(int fd);
+char	*ft_strdup(char *s1);
+size_t	ft_strlen(char *s);
+char	*ft_substr(char *s, unsigned int start, size_t len);
+char	*ft_strjoin(char *s1, char *s2);
+void	fill_str(char *res, char *s1, char *s2);
+
+static char	*ft_strchr(char *s, int c)
+{
+	unsigned int	i;
+	char			cc;
+
+	cc = (char) c;
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == cc)
+			return ((char *) &s[i]);
+		i++;
+	}
+	if (s[i] == cc)
+		return ((char *) &s[i]);
+	return (NULL);
+}
+
+char	*ft_strdup(char *s1)
+{
+	char			*dest;
+	unsigned int	i;
+
+	dest = (char *) malloc(ft_strlen(s1) + 1);
+	if (!dest)
+		return (NULL);
+	i = 0;
+	while (s1[i])
+	{
+		dest[i] = s1[i];
+		i++;
+	}
+	dest[i] = 0;
+	return (dest);
+}
+
+size_t	ft_strlen(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+char	*ft_substr(char *s, unsigned int start, size_t len)
+{
+	size_t	i;
+	char	*str;
+
+	if (!s)
+		return (NULL);
+	if (start > ft_strlen(s))
+		return (malloc(1));
+	if (len > ft_strlen(s + start))
+		len = ft_strlen(s + start);
+	str = malloc((len + 1) * sizeof(char));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		str[i] = s[start + i];
+		i++;
+	}
+	str[i] = 0;
+	return (str);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	char			*res;
+
+	res = (char *) malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	if (!res)
+		return (NULL);
+	fill_str(res, s1, s2);
+	return (res);
+}
+
+void	fill_str(char *res, char *s1, char *s2)
 {
 	unsigned int	i;
 	unsigned int	j;
 
 	i = 0;
-	while (s1[i])
-	{
-		dst[i] = s1[i];
-		i++;
-	}
+	j = 0;
+	while (s1[j])
+		res[i++] = s1[j++];
 	j = 0;
 	while (s2[j])
+		res[i++] = s2[j++];
+	res[i] = '\0';
+}
+
+char    *get_next_line(int fd)
+{
+    static char *left_c;
+    char        *line;
+    char        *buffer;
+
+    buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+
+    if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+    {
+        free(left_c);
+        free(buffer);
+        left_c = NULL;
+        buffer = NULL;
+        return (NULL);
+    }
+    if (!buffer)
+        return (NULL);
+    line = _fill_line_buffer(fd, left_c, buffer);
+
+    free(buffer);
+    buffer = NULL;
+    if (!line)
+        return (NULL);
+    left_c = _set_line(line);
+    return (line);
+}
+
+static char *_set_line(char *line_buffer)
+{
+    char    *left_c;
+    ssize_t    i;
+
+    i = 0;
+
+    while (line_buffer[i] != '\n' && line_buffer[i] != '\0')
+        i++;
+    if (line_buffer[i] == 0 || line_buffer[1] == 0)
+        return (NULL);
+    left_c = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
+    if (*left_c == 0)
+    {
+        free(left_c);
+        left_c = NULL;
+    }
+    line_buffer[i + 1] = 0;
+    return (left_c);
+}
+
+static char	*_fill_line_buffer(int fd, char *left_c, char *buffer)
+{
+	ssize_t	b_read;
+
+	b_read = 1;
+	while (b_read > 0)
 	{
-		dst[i] = s2[j];
-		i++;
-		j++;
+		b_read = read(fd, buffer, BUFFER_SIZE);
+		if (b_read == -1)
+		{
+			free(left_c);
+			return (NULL);
+		}
+		else if (b_read == 0)
+			break ;
+		buffer[b_read] = 0;
+		if (!left_c)
+			left_c = ft_strdup("");
+		left_c = ft_strjoin(left_c, buffer);
+		if (ft_strchr(buffer, '\n'))
+			break ;
 	}
-	dst[i] = '\0';
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	size_t	len;
-	char	*dst;
-
-	if (s1 == NULL || s2 == NULL)
-		return (NULL);
-	len = strlen(s1) + strlen(s2);
-	dst = (char *)malloc((1 + len) * sizeof(char));
-	if (!dst)
-		return (NULL);
-	fill_str(dst, s1, s2);
-	return (dst);
-}
-
-void	test1()
-{
-	char arr1[] = "";
-	char arr2[] = "123\n";
-	printf("%s", ft_strjoin(arr1, arr2));
-}
-void	test2()
-{
-	char arr1[] = "abc";
-	char arr2[] = "123\n";
-	printf("%s", ft_strjoin(arr1, arr2));
-}
-void	test3()
-{
-	char arr1[] = "abc";
-	char arr2[] = "\n";
-	printf("%s", ft_strjoin(arr1, arr2));
+	return (left_c);
 }
 
 int main()
 {
-	test1();
-	test2();
-	test3();
-	//test4();
+	char *path;
+	char *str;
+	int i;
+	int fd;
+
+	path = "test.txt";
+	fd = open(path, O_RDONLY);
+	i = 0;
+	while (i < 6)
+	{
+		str = get_next_line(fd);
+		printf("i: %i\n", i);
+		printf("fd: %i, content: %s\n", fd, str);
+		free(str);
+		i++;
+	}
 	return 0;
 }

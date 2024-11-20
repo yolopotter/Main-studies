@@ -17,6 +17,16 @@
 # include <fcntl.h>
 # include <unistd.h>
 
+#ifndef BUFFER_SIZE
 # define BUFFER_SIZE 1024
+#endif
+
+char	*get_next_line(int fd);
+char	*set_reminder(char *line);
+char	*fill_line(int fd, char *str_s, char *buffer);
+char	*ft_strjoin(char const *s1, char const *s2);
+void	fill_str(char *dst, const char *s1, const char *s2);
+char	*ft_strdup(const char *s);
+size_t	ft_strlen(const char *str);
 
 #endif

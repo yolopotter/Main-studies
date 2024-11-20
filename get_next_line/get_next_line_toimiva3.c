@@ -11,12 +11,9 @@
 /* ************************************************************************** */
 
 #include <unistd.h> //read
-#include <stdlib.h> //malloc, size_t
-#include <string.h> //strdup
-#include <stdio.h> //printf
-#include <fcntl.h> //open
+#include <stdlib.h> //malloc, free, size_t
 
-#define BUFFER_SIZE 34
+#define BUFFER_SIZE 3
 
 size_t	ft_strlen(const char *str)
 {
@@ -101,39 +98,40 @@ char	*fill_line(int fd, char *str_s, char *buffer)
 {
 	ssize_t	bytes_read;
 
-	bytes_read = 1;
-	while (bytes_read > 0)
+	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
 		if (!str_s)
 			str_s = ft_strdup("");
-		if (ft_strchr(str_s, '\n'))
-			break ;
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		else if (bytes_read == 0)
-			break ;
 		buffer[bytes_read] = '\0';
 		str_s = ft_strjoin(str_s, buffer);
+		if (ft_strchr(str_s, '\n'))
+			break ;
+	}
+	if (bytes_read == -1)
+	{
+		free(buffer);
+		return (NULL);
 	}
 	return (str_s);
 }
 
-char	*set_reminder(char **line)
+char	*set_reminder(char *line)
 {
 	char	*str_s;
-	int		i;
+	ssize_t		i;
 
 	i = 0;
-	while((*line)[i] != '\n' && (*line)[i] != '\0')
+	while(line[i] != '\n' && line[i] != '\0')
 		i++;
-	if ((*line)[i] == '\n')
+	if (line[i] == '\n')
 	{
-		str_s = strdup(&(*line)[i + 1]);
-		(*line)[i + 1] = '\0';
+		str_s = ft_strdup(&line[i + 1]);
+		if (*str_s == '\0')
+		{
+			free(str_s);
+			str_s = NULL;
+		}
+		line[i + 1] = '\0';
 		return (str_s);
 	}
 	str_s = NULL;
@@ -161,9 +159,12 @@ char	*get_next_line(int fd)
 	buffer = NULL;
 	if (!line)
 		return (NULL);
-	str_s = set_reminder(&line);
+	str_s = set_reminder(line);
 	return (line);
 }
+
+#include <stdio.h> //printf
+#include <fcntl.h> //open
 
 int main()
 {
