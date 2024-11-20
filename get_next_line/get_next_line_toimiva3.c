@@ -12,8 +12,9 @@
 
 #include <unistd.h> //read
 #include <stdlib.h> //malloc, free, size_t
+#include "get_next_line.h"
 
-#define BUFFER_SIZE 3
+#define BUFFER_SIZE 10000000
 
 size_t	ft_strlen(const char *str)
 {
