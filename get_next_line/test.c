@@ -1,8 +1,6 @@
 #include <unistd.h> //read
 #include <stdlib.h> //malloc, size_t
 #include <string.h> //strdup
-#include <stdio.h> //printf
-#include <fcntl.h> //open
 
 #define BUFFER_SIZE 3
 
@@ -185,7 +183,9 @@ static char	*_fill_line_buffer(int fd, char *left_c, char *buffer)
 	}
 	return (left_c);
 }
-
+#include <stdio.h> //printf
+#include <fcntl.h> //open
+/*
 int main()
 {
 	char *path;
@@ -193,7 +193,7 @@ int main()
 	int i;
 	int fd;
 
-	path = "test.txt";
+	path = "big_line_no_nl";
 	fd = open(path, O_RDONLY);
 	i = 0;
 	while (i < 6)
@@ -206,3 +206,51 @@ int main()
 	}
 	return 0;
 }
+*/
+int main(void) {
+    char *line;
+
+    // Read from stdin in a loop
+    while ((line = get_next_line(0)) != NULL) {
+        printf("Read line: %s\n", line);
+        free(line); // Free the allocated memory after use
+    }
+
+    return 0;
+}
+/*
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include "get_next_line.h" // Include your get_next_line header
+
+int main(int argc, char **argv) {
+    char *line;
+    int fd;
+
+    // Check if the user provided a file path
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <file_path>\n", argv[0]);
+        return 1;
+    }
+
+    // Open the file
+    fd = open(argv[1], O_RDONLY);
+    if (fd == -1) {
+        perror("Error opening file");
+        return 1;
+    }
+
+    // Read lines from the file descriptor
+    while ((line = get_next_line(fd)) != NULL) {
+        printf("Read line: %s\n", line);
+        free(line); // Free the allocated memory
+    }
+
+    // Close the file descriptor
+    close(fd);
+    return 0;
+}
+*/
+
