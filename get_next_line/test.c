@@ -253,4 +253,21 @@ int main(int argc, char **argv) {
     return 0;
 }
 */
+/*
+#include "get_next_line.h"
+#include <stdarg.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
 
+#define MAX_CALLS 1000
+
+int main(void)
+{
+	char	*line;
+	line = get_next_line(STDIN_FILENO);
+	printf(" %s\n", line);
+    return (0);
+}
+*/

@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 16:37:40 by vlopatin          #+#    #+#             */
-/*   Updated: 2024/11/14 17:09:52 by vlopatin         ###   ########.fr       */
+/*   Updated: 2024/11/22 14:27:32 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,10 @@
 # include "../libft/libft.h"
 
 int		ft_printf(const char *s, ...);
-int		is_identifier(va_list args, char a);
 
 void	ft_putstr(char *str);
 int		ft_putnbr_base(unsigned long nbr, char	*base);
-char	*ft_uitoa(unsigned int n);
+char	*ft_utoa(unsigned int n);
 
 int		ft_char(va_list args);
 int		ft_hex(va_list args, char *case_type);

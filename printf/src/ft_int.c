@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 19:07:10 by vlopatin          #+#    #+#             */
-/*   Updated: 2024/11/14 15:12:02 by vlopatin         ###   ########.fr       */
+/*   Updated: 2024/11/22 16:46:16 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,5 @@ int	ft_int(va_list args)
 	ft_putstr(itoa_str);
 	str_len = ft_strlen(itoa_str);
 	free(itoa_str);
-	return(str_len);
+	return (str_len);
 }

@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 16:49:21 by vlopatin          #+#    #+#             */
-/*   Updated: 2024/11/14 13:28:57 by vlopatin         ###   ########.fr       */
+/*   Updated: 2024/11/22 16:49:30 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int	ft_putnbr_base(unsigned long nbr, char	*base)
 
 	count = 0;
 	base_len = ft_strlen(base);
-	if(nbr >= base_len)
+	if (nbr >= base_len)
 		count += ft_putnbr_base(nbr / base_len, base);
-	count += write(1, &base[nbr % base_len] ,1);
+	count += write(1, &base[nbr % base_len], 1);
 	return (count);
 }
