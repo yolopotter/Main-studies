@@ -12,76 +12,6 @@
 
 #include "push_swap.h"
 
-int	stack_len(int *stack)
-{
-	int len;
-
-	len = 0;
-	while(stack[len] != -1)
-		len++;
-	return (len);
-}
-
-int	push(int *dst, int *src)
-{
-	int	len_src;
-	int	len_dst;
-	int	temp;
-
-	if (!src || !dst)
-		return (0);
-	len_src = stack_len(src);
-	if (len_src == 0)
-		return (0);
-	len_dst = stack_len(dst);
-	dst[len_dst + 1] = -1;
-	dst[len_dst] = src[len_src - 1];
-	src[len_src - 1] = -1;
-	return (1);
-}
-
-int	rrotate(int *stack)
-{
-	int	i;
-	int	len;
-	int	temp;
-
-	len = stack_len(stack);
-	if (len == 0)
-		return (1);
-	if (!stack)
-		return (1);
-	temp = stack[0];
-	i = 0;
-	while(i < len - 1)
-	{
-		stack[i] = stack[i + 1];
-		i++;
-	}
-	stack[i] = temp;
-	return (0);
-}
-
-int	rotate(int *stack)
-{
-	int	len;
-	int	temp;
-
-	len = stack_len(stack);
-	if (len == 0)
-		return (1);
-	if (!stack)
-		return (1);
-	temp = stack[len - 1];
-	while(len > 0)
-	{
-		stack[len - 1] = stack[len - 2];
-		len--;
-	}
-	stack[0] = temp;
-	return (0);
-}
-
 int	find_closest_nb_to_end(int current, int *stack_A)
 {
 	return 3;
@@ -97,11 +27,6 @@ void	algorithm(int amount, int *stack_A, int *stack_B)
 	chunck_size = amount/10;
 	while (current < amount)
 		closest_nb_position = find_closest_nb_to_end(current, stack_A);
-
-}
-
-int count_amount(argv)
-{
 
 }
 
