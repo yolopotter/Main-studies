@@ -16,7 +16,7 @@ SOURCES = \
 		ft_putnbr_base.c \
 		ft_putstr.c \
 		ft_string.c \
-		ft_uitoa.c \
+		ft_utoa.c \
 		ft_unsigned_int.c \
 
 OBJECTS = $(addprefix $(OBJ_DIR), $(SOURCES:.c=.o))
@@ -25,13 +25,13 @@ OBJF	=	.cache_exists
 
 all: $(NAME)
 
-makelibft:
-		make -C $(LIBFTDIR)
+$(NAME): $(LIBFTDIR)/$(LIBFTNAME) $(OBJECTS)
 		cp $(LIBFTDIR)/$(LIBFTNAME) .
 		mv $(LIBFTNAME) $(NAME)
+		ar -rcs $@ $(OBJECTS)
 
-$(NAME): makelibft $(OBJECTS)
-		ar -rcs $(NAME) $(OBJECTS)
+$(LIBFTDIR)/$(LIBFTNAME):
+		$(MAKE) -C $(LIBFTDIR)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJF)
 			@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
@@ -41,12 +41,23 @@ $(OBJF):
 
 clean:
 		rm -rf $(OBJ_DIR)
-		cd $(LIBFTDIR) && make clean
+		$(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
 		rm -f $(NAME)
-		cd $(LIBFTDIR) && make fclean
+		$(MAKE) -C $(LIBFTDIR) clean
 
-re: fclean all
 
-.PHONY: all clean fclean re makelibft
+
+
+
+OBJF = .cache
+
+$(OBJF)
+	mkdir -p $(OBJ_DIR)
+
+$(OBJ_DIR)%.o : $(SRC_DIR)%.c | $(OBJF)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+
+
