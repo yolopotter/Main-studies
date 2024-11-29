@@ -22,7 +22,7 @@ int	stack_len(int *stack)
 	return (len);
 }
 
-int count_amount(argv)
-{
+// int count_amount(argv)
+// {
 
-}
+// }

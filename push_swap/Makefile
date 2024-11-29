@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -g -Wall
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
-TARGET = program.exe
+TARGET = a.exe
 
 all: $(TARGET)
 

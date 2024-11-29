@@ -16,4 +16,9 @@
 # include <stdlib.h> // NULL
 # include <stdio.h> // printf
 
+int	stack_len(int *stack);
+int	apply_push(int *dst, int *src);
+int	apply_reverse_rotation(int *stack);
+int	apply_rotation(int *stack);
+
 #endif
