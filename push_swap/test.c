@@ -107,20 +107,48 @@ int	find_closest(int current_min, int current_max, int *stack_A)
 	return (i);
 }
 
+static int	find_max(int *stack_B)
+{
+	int	i;
+	int	max;
+
+	i = 0;
+	max = 0;
+	while(stack_B[i] != -1)
+	{
+		if (stack_B[i] > max)
+			max = stack_B[i];
+		i++;
+	}
+	return (max);
+}
+
 int	find_gap(int nb, int *stack_B)
 {
 	int	i;
-	int	j;
+	int	max;
 
 	i = 0;
-	j = 0;
+	max = find_max(stack_B);
 	while(stack_B[i] != -1)
 	{
-		if(nb - stack_B[i] > 0 && (nb - stack_B[i] < nb - stack_B[j]))
-			j = i;
+		if (nb > max)
+		{
+			i = 0;
+			while (stack_B[i] != -1)
+			{
+				if(stack_B[i] == max)
+					return (i);
+				i++;
+			}
+		}
+		if (nb < stack_B[i] && nb < stack_B[i + 1])
+			return (i);
+		if (nb > stack_B[i] && nb < stack_B[i + 1])
+			return (i);
 		i++;
 	}
-	return (j);
+	return (i);
 }
 
 int	rotate_B(int nb, int *stack_B)
@@ -131,8 +159,6 @@ int	rotate_B(int nb, int *stack_B)
 	i = 0;
 	ops = 0;
 	i = find_gap(nb, stack_B);
-	if(i == 0)
-		i = stack_len(stack_B);
 	if ((i >= stack_len(stack_B) / 2))
 	{
 		while ((stack_len(stack_B) - (i + 1)) > 0)
@@ -162,7 +188,6 @@ int	algorithm(int amount, int *stack_A, int *stack_B)
 	int	ops;
 	int	current_max;
 	int	current_min;
-	// int	closest_nb_position;
 	int i = 0;
 	int j = 0;
 	current_max = 0;
@@ -173,8 +198,6 @@ int	algorithm(int amount, int *stack_A, int *stack_B)
 	chunck_size = 3;
 	current_max = chunck_size - 1;
 	current_min = current_max - (chunck_size - 1);
-	// while (current < amount)
-	// 	closest_nb_position = find_closest_nb_to_end(current, stack_A);
 	while (current_max < amount)
 	{
 		j = chunck_size;
@@ -203,8 +226,9 @@ int	algorithm(int amount, int *stack_A, int *stack_B)
 			}
 			ops += rotate_B(stack_A[stack_len(stack_A) - 1], stack_B);
 			apply_push(stack_B, stack_A);
-			if (stack_B[stack_len(stack_B) - 1] < stack_B[stack_len(stack_B) - 2])
-				apply_rotation(stack_B);
+			// if (stack_B[stack_len(stack_B) - 1] > stack_B[stack_len(stack_B) - 2]
+			// 		&& stack_len(stack_B) > 1)
+			// 	apply_rotation(stack_B);
 			ops++;
 			// printf("pa\n");
 			j--;
@@ -225,7 +249,7 @@ int main()
         printf("Memory allocation failed\n");
         return 1;
     }
-    int values[] = {1, 0, 2, -1};
+    int values[] = {0, 6, 9, 12, 13, 14, 4, 1, 8, 10, 11, 5, 2, 7, 3, -1};
     int num_values = sizeof(values) / sizeof(values[0]);
 
     for (i = 0; i < num_values; i++)

@@ -52,22 +52,64 @@ int	apply_rotation(int *stack)
 	return (0);
 }
 //Tarkasta toimiiko tää nyt oikein
+// int	find_gap(int nb, int *stack_B)
+// {
+// 	int	i;
+// 	int	j;
+
+// 	i = 0;
+// 	j = 0;
+// 	if (nb < stack_B[i])
+// 		return (stack_len(stack_B));
+// 	while(stack_B[i] != -1)
+// 	{
+// 		if (nb - stack_B[i] > 0 && nb - stack_B[i] < nb - stack_B[j])
+// 			j = i;
+// 		i++;
+// 	}
+// 	return (j);
+// }
+static int	find_max(int *stack_B)
+{
+	int	i;
+	int	max;
+
+	i = 0;
+	max = 0;
+	while(stack_B[i] != -1)
+	{
+		if (stack_B[i] > max)
+			max = stack_B[i];
+		i++;
+	}
+	return (max);
+}
+
 int	find_gap(int nb, int *stack_B)
 {
 	int	i;
-	int	j;
+	int	max;
 
 	i = 0;
-	j = -1;
+	max = find_max(stack_B);
 	while(stack_B[i] != -1)
 	{
-		if (nb < stack_B[i])
-			return (stack_len(stack_B));
-		if (nb - stack_B[i] < nb - stack_B[j])
-			j = i;
+		if (nb > max)
+		{
+			i = 0;
+			while (stack_B[i] != -1)
+			{
+				if(stack_B[i] == max)
+					return (i);
+			}
+		}
+		if (nb < stack_B[i] && nb < stack_B[i + 1])
+			return (i);
+		if (nb > stack_B[i] && nb < stack_B[i + 1])
+			return (i);
 		i++;
 	}
-	return (j);
+	return (i);
 }
 
 int	rotate_B(int nb, int *stack_B)
@@ -110,7 +152,7 @@ int main()
         printf("Memory allocation failed\n");
         return 1;
     }
-    int values[] = {0, 2, -1};
+    int values[] = {19, 3, 5, 6, 10, 11, 13, 14, 18, -1};
     int num_values = sizeof(values) / sizeof(values[0]);
 
     for (i = 0; i < num_values; i++)
@@ -119,12 +161,12 @@ int main()
 	int	current_max = 5;
 	int	current_min = 3;
 
-	i = rotate_B(1, stackA);
-	printf("%d\n", i);
+	int ops = rotate_B(50, stackA);
 	i = 0;
 	while (stackA[i] != -1)
 		printf("%d ", stackA[i++]);
 	printf("%d ", stackA[i]);
 	printf("\n\n");
+	printf("Ops: %i", ops);
 	return 0;
 }
