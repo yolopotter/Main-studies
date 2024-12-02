@@ -51,6 +51,24 @@ int	apply_rotation(int *stack)
 	stack[0] = temp;
 	return (0);
 }
+//Tarkasta toimiiko tää nyt oikein
+// int	find_gap(int nb, int *stack_B)
+// {
+// 	int	i;
+// 	int	j;
+
+// 	i = 0;
+// 	j = 0;
+// 	if (nb < stack_B[i])
+// 		return (stack_len(stack_B));
+// 	while(stack_B[i] != -1)
+// 	{
+// 		if (nb - stack_B[i] > 0 && nb - stack_B[i] < nb - stack_B[j])
+// 			j = i;
+// 		i++;
+// 	}
+// 	return (j);
+// }
 static int	find_max(int *stack_B)
 {
 	int	i;
