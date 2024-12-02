@@ -1,4 +1,4 @@
-# **42 main studies repository**
+<h1 align="center">**42 main studies**</h1>
 ## **Projects**
 ### **Libft**
 ### **Printf**
