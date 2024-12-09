@@ -2,47 +2,329 @@
 # include <string.h>
 # include <stdio.h>
 # include "./libft/libft.h"
-# include "./include/ft_printf.h"
 
 //ccc -Wno-format -Iinclude ultimate_test_file.c libftprintf.a
 
+int		ft_printf(const char *s, ...);
+
+void	ft_putstr(char *str);
+int		ft_putnbr_base(unsigned long nbr, char	*base);
+char	*ft_utoa(unsigned int n);
+
+int		ft_char(va_list args);
+int		ft_hex(va_list args, char *case_type);
+int		ft_int(va_list args);
+int		ft_pointer(va_list args);
+int		ft_string(va_list args);
+int		ft_unsigned_int(va_list args);
+
+static	char	*special_case(void)
+{
+	char	*arr;
+	int		i;
+	char	*nbr;
+
+	nbr = "-2147483648";
+	arr = malloc(12 * sizeof(char));
+	if (!arr)
+		return (NULL);
+	i = 0;
+	while (nbr[i])
+	{
+		arr[i] = nbr[i];
+		i++;
+	}
+	arr[i] = '\0';
+	return (arr);
+}
+
+static	int	lenint_itoa(int n)
+{
+	size_t	len;
+
+	len = 0;
+	if (n < 0)
+	{
+		len += 1;
+		n = -n;
+	}
+	while (n >= 10)
+	{
+		n = n / 10;
+		len++;
+	}
+	len++;
+	return (len);
+}
+
+static	int	sign_conversion(int n, int *sign)
+{
+	if (n < 0)
+	{
+		*sign = -1;
+		n = -n;
+	}
+	return (n);
+}
+
+char	*ft_itoa(int n)
+{
+	char	*str;
+	size_t	len;
+	int		sign;
+
+	if (n == -2147483648)
+	{
+		str = special_case();
+		return (str);
+	}
+	len = lenint_itoa(n);
+	str = (char *)malloc(1 + len * sizeof(char));
+	if (!str)
+		return (NULL);
+	sign = 1;
+	n = sign_conversion(n, &sign);
+	str[len] = 0;
+	while (len > 0)
+	{
+		len--;
+		str[len] = n % 10 + '0';
+		n = n / 10;
+	}
+	if (sign == -1)
+		str[0] = '-';
+	return (str);
+}
+
+static	int	lenint(unsigned int n)
+{
+	size_t	len;
+
+	len = 0;
+	while (n >= 10)
+	{
+		n = n / 10;
+		len++;
+	}
+	len++;
+	return (len);
+}
+
+char	*ft_utoa(unsigned int n)
+{
+	char	*str;
+	size_t	len;
+
+	len = lenint(n);
+	str = (char *)malloc(1 + len * sizeof(char));
+	if (!str)
+		return (NULL);
+	str[len] = '\0';
+	while (len > 0)
+	{
+		len--;
+		str[len] = n % 10 + '0';
+		n = n / 10;
+	}
+	return (str);
+}
+
+void	ft_putstr(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		write(1, &str[i], 1);
+		i++;
+	}
+}
+
+int	ft_unsigned_int(va_list args)
+{
+	unsigned int		value;
+	int					str_len;
+	char				*uitoa_str;
+
+	value = va_arg(args, unsigned int);
+	uitoa_str = ft_utoa(value);
+	ft_putstr(uitoa_str);
+	str_len = strlen(uitoa_str);
+	free(uitoa_str);
+	return(str_len);
+}
+
+int	ft_string(va_list args)
+{
+	char	*value;
+
+	value = va_arg(args, char*);
+	if (!value)
+	{
+		ft_putstr("(null)");
+		return (6);
+	}
+	else
+		ft_putstr(value);
+	return(strlen(value));
+}
+
+int	ft_putnbr_base(unsigned long nbr, char	*base)
+{
+	unsigned long	base_len;
+	int				count;
+
+	count = 0;
+	base_len = strlen(base);
+	if(nbr >= base_len)
+		count += ft_putnbr_base(nbr / base_len, base);
+	count += write(1, &base[nbr % base_len] ,1);
+	return (count);
+}
+
+int	ft_pointer(va_list args)
+{
+	void	*value;
+	int		count;
+
+	count = 0;
+	value = va_arg(args, void*);
+	if (value == 0)
+		count += write(1, "(nil)", 5);
+	else
+	{
+		count += write(1, "0x", 2);
+		count += ft_putnbr_base((unsigned long)value, "0123456789abcdef");
+	}
+	return(count);
+}
+
+int	ft_int(va_list args)
+{
+	int		value;
+	int		str_len;
+	char	*itoa_str;
+
+	value = va_arg(args, int);
+	itoa_str = ft_itoa(value);
+	ft_putstr(itoa_str);
+	str_len = strlen(itoa_str);
+	free(itoa_str);
+	return(str_len);
+}
+
+int	ft_hex(va_list args, char *case_type)
+{
+	unsigned int	value;
+	int				count;
+
+	count = 0;
+	value = va_arg(args, unsigned int);
+	if (strncmp(case_type, "lower", strlen("upper")) == 0)
+		count += ft_putnbr_base((unsigned long)value, "0123456789abcdef");
+	else if (strncmp(case_type, "upper", strlen("upper")) == 0)
+		count += ft_putnbr_base((unsigned long)value, "0123456789ABCDEF");
+	return (count);
+}
+
+int	ft_char(va_list args)
+{
+	char	value;
+
+	value = va_arg(args, int);
+	write(1, &value, 1);
+	return (1);
+}
+
+static int	is_identifier(va_list args, char a)
+{
+	int	c;
+
+	c = 0;
+	if (a == 'c')
+		c += ft_char(args);
+	else if (a == 's')
+		c += ft_string(args);
+	else if (a == 'p')
+		c += ft_pointer(args);
+	else if (a == 'd' || a == 'i')
+		c += ft_int(args);
+	else if (a == 'u')
+		c += ft_unsigned_int(args);
+	else if (a == 'x')
+		c += ft_hex(args, "lower");
+	else if (a == 'X')
+		c += ft_hex(args, "upper");
+	else if (a == '%')
+		c += write(1, "%", 1);
+	return (c);
+}
+
+int	ft_printf(const char *s, ...)
+{
+	va_list		args;
+	int			i;
+	int			c;
+
+	va_start (args, s);
+	i = 0;
+	c = 0;
+	while (s[i])
+	{
+		if (s[i] == '%' && (!strchr("cspdiuxX%", s[i + 1]) || s[i + 1] == '\0'))
+			return (-1);
+		if (s[i] == '%' && strchr("cspdiuxX%", s[i + 1]))
+		{
+			c += is_identifier(args, s[i + 1]);
+			i++;
+		}
+		else
+			c += write(1, &s[i], 1);
+		i++;
+	}
+	va_end (args);
+	return (c);
+}
+
+
 // Test 1: Testing pointer output with unsigned int
-// void test_tester1() {
-//     printf("Test tester NULL: \n");
-//     int j = ft_printf(" NULL %s NULL \n", NULL);
-//     int l = printf(" NULL %s NULL \n", NULL);
-//     printf("ft_printf result: %i\n", j);
-//     printf("printf result: %i\n\n", l);
-// }
+void test_tester1() {
+    printf("Test tester NULL: \n");
+    int j = ft_printf(" NULL %s NULL \n", NULL);
+    int l = printf(" NULL %s NULL \n", NULL);
+    printf("ft_printf result: %i\n", j);
+    printf("printf result: %i\n\n", l);
+}
 
-// // Test 2 Testing pointer output with unsigned int
-// void test_tester2() {
-//     printf("Test tester NULL: \n");
-//     int j = ft_printf(" %p %p \n", 0, 0);
-//     int l = printf(" %p %p \n", 0, 0);
-//     printf("ft_printf result: %i\n", j);
-//     printf("printf result: %i\n\n", l);
-// }
+// Test 2 Testing pointer output with unsigned int
+void test_tester2() {
+    printf("Test tester NULL: \n");
+    int j = ft_printf(" %p %p \n", 0, 0);
+    int l = printf(" %p %p \n", 0, 0);
+    printf("ft_printf result: %i\n", j);
+    printf("printf result: %i\n\n", l);
+}
 
 // Test 1: Testing pointer output with unsigned int
-// void test1() {
-//     unsigned int b = 2326657;
-//     printf("Test 1: Testing pointer output with unsigned int\n");
-//     int j = ft_printf("%p\n", b);
-//     int l = printf("%p\n", b);
-//     printf("ft_printf result: %i\n", j);
-//     printf("printf result: %i\n\n", l);
-// }
+void test1() {
+    unsigned int b = 2326657;
+    printf("Test 1: Testing pointer output with unsigned int\n");
+    int j = ft_printf("%p\n", b);
+    int l = printf("%p\n", b);
+    printf("ft_printf result: %i\n", j);
+    printf("printf result: %i\n\n", l);
+}
 
-// // Test 2: Testing pointer output with signed int
-// void test2() {
-//     int b = 123456;
-//     printf("Test 2: Testing pointer output with signed int\n");
-//     int j = ft_printf("%p\n", b);
-//     int l = printf("%p\n", b);
-//     printf("ft_printf result: %i\n", j);
-//     printf("printf result: %i\n\n", l);
-// }
+// Test 2: Testing pointer output with signed int
+void test2() {
+    int b = 123456;
+    printf("Test 2: Testing pointer output with signed int\n");
+    int j = ft_printf("%p\n", b);
+    int l = printf("%p\n", b);
+    printf("ft_printf result: %i\n", j);
+    printf("printf result: %i\n\n", l);
+}
 
 // Test 3: Testing integer output with signed int
 void test3() {
@@ -55,14 +337,14 @@ void test3() {
 }
 
 // Test 4: Testing integer output with a string
-// void test4() {
-//     char arr[] = "1234";
-//     printf("Test 4: Testing integer output with a string\n");
-//     int j = ft_printf("%i\n", arr);
-//     int l = printf("%i\n", arr);
-//     printf("ft_printf result: %i\n", j);
-//     printf("printf result: %i\n\n", l);
-// }
+void test4() {
+    char arr[] = "1234";
+    printf("Test 4: Testing integer output with a string\n");
+    int j = ft_printf("%i\n", arr);
+    int l = printf("%i\n", arr);
+    printf("ft_printf result: %i\n", j);
+    printf("printf result: %i\n\n", l);
+}
 
 // Test 5: Testing pointer output with a string
 void test5() {
@@ -127,34 +409,36 @@ void test10() {
 }
 
 // Test 11: Testing zero integer output
-// void test11() {
-//     printf("Test 11: wrong/no specifier\n\n");
-// 	printf("\n");
-//     int j = ft_printf("%");
-// 	printf("\n");
-//     int l = printf("%");
-// 	printf("\n");
-//     printf("ft_printf result: %i\n", j);
-//     printf("printf result: %i\n\n", l);
-// }
+void test11() {
+    printf("Test 11: wrong/no specifier\n\n");
+	printf("\n");
+    int j = ft_printf("%");
+	printf("\n");
+    int l = printf("%");
+	printf("\n");
+    printf("ft_printf result: %i\n", j);
+    printf("printf result: %i\n\n", l);
+}
 
-// // Test 12: Testing zero integer output
-// void test12() {
-//     printf("Test 12: wrong/no specifier\n");
-//     int j = ft_printf("%k");
-//     int l = printf("%k");
-//     printf("ft_printf result: %i\n", j);
-//     printf("printf result: %i\n\n", l);
-// }
+// Test 12: Testing zero integer output
+void test12() {
+    printf("Test 12: wrong/no specifier\n");
+    int j = ft_printf("%k");
+    int l = printf("%k");
+    printf("ft_printf result: %i\n", j);
+    printf("printf result: %i\n\n", l);
+}
 
-// // Test 13: Testing zero integer output
-// void test13() {
-//     printf("Test 13: wrong/no specifier\n");
-//     int j = ft_printf("abc%");
-//     int l = printf("abc%");
-//     printf("ft_printf result: %i\n", j);
-//     printf("printf result: %i\n\n", l);
-// }
+// Test 13: Testing zero integer output
+void test13() {
+    printf("Test 13: wrong/no specifier\n");
+    int j = ft_printf("abc%");
+    int l = printf("abc%");
+    printf("ft_printf result: %i\n", j);
+    printf("printf result: %i\n\n", l);
+}
+
+#include <stdio.h>
 
 // Cross-Test 1: Integer and pointer with the same value
 void cross_test1() {
@@ -419,21 +703,21 @@ void test_extra_arguments2() {
 
 
 int main() {
-	// test_tester1();
-	// test_tester2();
-    // test1();
-    // test2();
+	test_tester1();
+	test_tester2();
+    test1();
+    test2();
     test3();
-    // test4();
+    test4();
     test5();
     test6();
     test7();
     test8();
     test9();
     test10();
-	// test11();
-	// test12();
-	// test13();
+	test11();
+	test12();
+	test13();
 	cross_test1();
     cross_test2();
     cross_test3();
