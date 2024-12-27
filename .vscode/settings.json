@@ -1,6 +1,10 @@
 {
 	"files.associations": {
 		"stdarg.h": "c",
-		"fdf.h": "c"
+		"fdf.h": "c",
+		"string.h": "c",
+		"stdlib.h": "c",
+		"compare": "c",
+		"cstdint": "c"
 	}
 }
