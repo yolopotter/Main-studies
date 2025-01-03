@@ -5,6 +5,7 @@
 		"string.h": "c",
 		"stdlib.h": "c",
 		"compare": "c",
-		"cstdint": "c"
+		"cstdint": "c",
+		"functional": "c"
 	}
 }
