@@ -7,5 +7,6 @@
 		"compare": "c",
 		"cstdint": "c",
 		"functional": "c"
-	}
+	},
+	"cmake.sourceDirectory": "/home/vallu/Coding/Main-studies/fdf/lib/MLX42"
 }
