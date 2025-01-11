@@ -1,4 +1,9 @@
-#include "push_swap.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <math.h>
+#define min(a, b) ((a) < (b) ? (a) : (b))
+
 
 int	stack_len(int *stack)
 {
@@ -10,83 +15,61 @@ int	stack_len(int *stack)
 	return (len);
 }
 
-int	apply_reverse_rotation(int *stack)
-{
-	int	i;
-	int	len;
-	int	temp;
-
-	len = stack_len(stack);
-	if (len == 0)
-		return (1);
-	if (!stack)
-		return (1);
-	temp = stack[0];
-	i = 0;
-	while(i < len - 1)
-	{
-		stack[i] = stack[i + 1];
-		i++;
-	}
-	stack[i] = temp;
-	return (0);
-}
-
-int	apply_rotation(int *stack)
-{
-	int	len;
-	int	temp;
-
-	len = stack_len(stack);
-	if (len == 0)
-		return (1);
-	if (!stack)
-		return (1);
-	temp = stack[len - 1];
-	while(len > 0)
-	{
-		stack[len - 1] = stack[len - 2];
-		len--;
-	}
-	stack[0] = temp;
-	return (0);
-}
-static int	find_max(int *stack_B)
+static int	find_max(int *stack)
 {
 	int	i;
 	int	max;
 
 	i = 0;
 	max = 0;
-	while(stack_B[i] != -1)
+	while(stack[i] != -1)
 	{
-		if (stack_B[i] > max)
-			max = stack_B[i];
+		if (stack[i] > max)
+			max = stack[i];
 		i++;
 	}
 	return (max);
+}
+
+static int	find_min(int *stack)
+{
+	int	i;
+	int	min;
+
+	i = 0;
+	if (stack_len(stack) == 0)
+		return (0);
+	min = stack[i];
+	while(stack[i] != -1)
+	{
+		if (stack[i] < min)
+			min = stack[i];
+		i++;
+	}
+	return (min);
 }
 
 int	find_gap(int nb, int *stack_B)
 {
 	int	i;
 	int	max;
+	int	min;
 
 	i = 0;
 	max = find_max(stack_B);
+	min = find_min(stack_B);
 	while(stack_B[i] != -1)
 	{
-		if (nb > max)
+		if (nb > max || nb < min)
 		{
 			i = 0;
 			while (stack_B[i] != -1)
 			{
 				if(stack_B[i] == max)
 					return (i);
+				i++;
 			}
 		}
-		if (nb < stack_B[i] && nb < stack_B[i + 1])
-			return (i);
 		if (nb > stack_B[i] && nb < stack_B[i + 1])
 			return (i);
 		i++;
@@ -94,61 +77,111 @@ int	find_gap(int nb, int *stack_B)
 	return (i);
 }
 
-int	rotate_B(int nb, int *stack_B)
+
+int	CALCULATE_find_current_position(int current, int *stack_A)
 {
-	int	i;
-	int	ops;
+	int i;
 
 	i = 0;
-	ops = 0;
-	i = find_gap(nb, stack_B);
-	if ((i >= stack_len(stack_B) / 2))
+	while (stack_A[i] != -1)
 	{
-		while ((stack_len(stack_B) - (i + 1)) > 0)
+		if (stack_A[i] == current)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+int	CALCULATE_rotation_or_reverse(int pos, int *stack)
+{
+	int rotations;
+
+	rotations = 0;
+	if ((pos >= stack_len(stack) / 2))
+	{
+		while ((stack_len(stack) - (pos + 1)) > 0)
 		{
-			apply_rotation(stack_B);
-			ops++;
-			// printf("rr\n");
-			i++;
+			pos++;
+			rotations++; //r
 		}
 	}
 	else
 	{
-		while (i >= 0)
+		while (pos >= 0)
 		{
-			apply_reverse_rotation(stack_B);
-			ops++;
-			// printf("rr\n");
-			i--;
+			pos--;
+			rotations--; //rr
 		}
 	}
-	return (ops);
+	return (rotations);
+}
+
+int	CALCULATE_find_smallest_current(int c_min, int c_max, int *i, int *stack_A)
+{
+	while (stack_A[*i] != -1)
+	{
+		if (stack_A[*i] >= c_min && stack_A[*i] <= c_max)
+		{
+			return (stack_A[(*i)++]);
+		}
+		(*i)++;
+	}
+	return (-1);
+}
+
+int	CALCULATE_price(int ra, int rb)
+{
+	int delta;
+	int price;
+
+	delta = ra - rb;
+	if ((ra > 0 && rb > 0) || (ra < 0 && rb < 0))
+		price = abs(delta) + min(abs(ra), abs(rb));
+	else
+		price = abs(delta);
+	return (price);
+}
+
+int	CALCULATE_find_cheapest_nb(int c_min, int c_max, int *stack_A, int *stack_B)
+{
+	int	i;
+	int	current_nb;
+	int	position_A;
+	int	position_B;
+	int cheapest_position;
+	int	ra;
+	int	rb;
+	int	price;
+	int cheapest;
+
+	i = 0;
+	cheapest = 1000000;
+	while (i < c_max - c_min + 1) // seems to be working perfectly now. Next thing to build is actual rrr and rr.
+	{
+		current_nb = CALCULATE_find_smallest_current(c_min, c_max, &i, stack_A);
+		if (current_nb == -1)
+			break ;
+		position_A = CALCULATE_find_current_position(current_nb, stack_A);
+		ra = CALCULATE_rotation_or_reverse(position_A, stack_A);
+		position_B = find_gap(current_nb, stack_B);
+		rb = CALCULATE_rotation_or_reverse(position_B, stack_B);
+		price = CALCULATE_price(ra, rb);
+		if (price < cheapest)
+		{
+			cheapest_position = position_A;
+			cheapest = price;
+		}
+	}
+	printf("cheapest %i\n", cheapest);
+	return (cheapest_position);
 }
 
 int main()
 {
-	int i = 0;
-	int *stackA = malloc(1000 * sizeof(int));
-
-    if (!stackA) {
-        printf("Memory allocation failed\n");
-        return 1;
-    }
-    int values[] = {19, 3, 5, 6, 10, 11, 13, 14, 18, -1};
-    int num_values = sizeof(values) / sizeof(values[0]);
-
-    for (i = 0; i < num_values; i++)
-        stackA[i] = values[i];
-
-	int	current_max = 5;
-	int	current_min = 3;
-
-	int ops = rotate_B(50, stackA);
-	i = 0;
-	while (stackA[i] != -1)
-		printf("%d ", stackA[i++]);
-	printf("%d ", stackA[i]);
-	printf("\n\n");
-	printf("Ops: %i", ops);
-	return 0;
+	int arr_A[] = {18, 5, 8, 15, 16, 11, 14, 19, 12, 9, 17, -1};
+	int arr_B[] = {13, 0, 1, 2, 3, 4, 6, 7, 10, -1, -1};
+	int c_min = 5;
+	int c_max = 15;
+	int pos = CALCULATE_find_cheapest_nb(c_min, c_max, arr_A, arr_B);
+	printf("cheapest pos: %i\n", pos);
 }

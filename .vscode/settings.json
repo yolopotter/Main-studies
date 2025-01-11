@@ -6,7 +6,9 @@
 		"stdlib.h": "c",
 		"compare": "c",
 		"cstdint": "c",
-		"functional": "c"
+		"functional": "c",
+		"limits.h": "c",
+		"libft.h": "c"
 	},
 	"cmake.sourceDirectory": "/home/vallu/Coding/Main-studies/fdf/lib/MLX42"
 }

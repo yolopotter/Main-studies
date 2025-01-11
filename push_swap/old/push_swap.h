@@ -6,12 +6,12 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:51:35 by vlopatin          #+#    #+#             */
-/*   Updated: 2024/11/28 12:51:35 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/09 12:22:29 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PUSH_SWAP
-# define PUSH_SWAP
+#ifndef PUSH_SWAP_H
+# define PUSH_SWAP_H
 
 # include <stdlib.h> // NULL
 # include <stdio.h> // printf

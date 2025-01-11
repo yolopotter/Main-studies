@@ -51,7 +51,7 @@ int	apply_rotation(int *stack)
 	stack[0] = temp;
 	return (0);
 }
-//Tarkasta toimiiko tää nyt oikein
+// Tarkasta toimiiko tää nyt oikein
 // int	find_gap(int nb, int *stack_B)
 // {
 // 	int	i;
