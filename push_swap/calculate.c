@@ -156,7 +156,7 @@ int	CALCULATE_find_cheapest_nb(int c_min, int c_max, int *stack_A, int *stack_B)
 
 	i = 0;
 	cheapest = 1000000;
-	while (i < c_max - c_min + 1) // seems to be working perfectly now. Next thing to build is actual rrr and rr.
+	while (stack_A[i] != -1) // seems to be working perfectly now. Next thing to build is actual rrr and rr.
 	{
 		current_nb = CALCULATE_find_smallest_current(c_min, c_max, &i, stack_A);
 		if (current_nb == -1)
@@ -178,10 +178,11 @@ int	CALCULATE_find_cheapest_nb(int c_min, int c_max, int *stack_A, int *stack_B)
 
 int main()
 {
-	int arr_A[] = {18, 5, 8, 15, 16, 11, 14, 19, 12, 9, 17, -1};
-	int arr_B[] = {13, 0, 1, 2, 3, 4, 6, 7, 10, -1, -1};
-	int c_min = 5;
-	int c_max = 15;
+	int arr_A[] = {59, 43, 41, 36, 39, 35, 54, 48, 55, 42, 40, 44, 37, 31, 27, 34, 26, 46, 52, 25, 58, 32, 47, 49, 56, 53, 50, 45, 51, 57, 38, -1};
+	int arr_B[] = {30, 33, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 28, 29, -1};
+	int c_min = 20;
+	int c_max = 35;
 	int pos = CALCULATE_find_cheapest_nb(c_min, c_max, arr_A, arr_B);
 	printf("cheapest pos: %i\n", pos);
+	printf("cheapest num: %i\n", arr_A[pos]);
 }
