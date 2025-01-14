@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:27:39 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/10 13:05:50 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:46:38 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,13 @@ static void	*ft_calloc(size_t nmemb, size_t size)
 		return (NULL);
 	ptr = malloc(result);
 	if (ptr != NULL)
-	i = 0;
-	while (i < nmemb)
 	{
-		ptr[i] = -1;
-		i++;
+		i = 0;
+		while (i < nmemb)
+		{
+			ptr[i] = -1;
+			i++;
+		}
 	}
 	return (ptr);
 }
