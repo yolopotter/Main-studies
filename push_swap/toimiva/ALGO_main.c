@@ -10,6 +10,55 @@ int	stack_len(int *stack)
 	return (len);
 }
 
+int	find_max(int *stack)
+{
+	int	i;
+	int	max;
+
+	i = 0;
+	max = 0;
+	while(stack[i] != -1)
+	{
+		if (stack[i] > max)
+			max = stack[i];
+		i++;
+	}
+	return (max);
+}
+
+int	find_min(int *stack)
+{
+	int	i;
+	int	min;
+
+	i = 0;
+	if (stack_len(stack) == 0)
+		return (0);
+	min = stack[i];
+	while(stack[i] != -1)
+	{
+		if (stack[i] < min)
+			min = stack[i];
+		i++;
+	}
+	return (min);
+}
+
+int	apply_swap(int *src)
+{
+	int temp;
+	int len;
+
+	len = stack_len(src);
+	if (!src || len == 0)
+		return (0);
+	if (len == 1)
+		return (1);
+	temp = src[len - 1];
+	src[len - 1] = src[len - 2];
+	src[len - 2] = temp;
+	return (1);
+}
 int	apply_push(int *dst, int *src)
 {
 	int	len_src;
@@ -73,11 +122,13 @@ int	move_all_to_other(int *dst, int *src)
 {
 	int len;
 	int ops;
+	int	min;
 
 	ops = 0;
 	len = 0;
+	min = find_min(src);
 	len = stack_len(src);
-	while (src[0] != 0)
+	while (src[0] != min)
 	{
 		apply_rotation(src);
 		ops++;
@@ -85,7 +136,7 @@ int	move_all_to_other(int *dst, int *src)
 	while (len > 0)
 	{
 		apply_push(dst, src);
-		// printf("pb\n");
+		// write(1, "pb\n", 3);
 		ops++;
 		len--;
 	}
@@ -109,40 +160,6 @@ int	find_closest(int current_min, int current_max, int *stack_A)
 	if(distance < (stack_len(stack_A) - i - 1))
 		return (distance - 1);
 	return (i);
-}
-
-static int	find_max(int *stack)
-{
-	int	i;
-	int	max;
-
-	i = 0;
-	max = 0;
-	while(stack[i] != -1)
-	{
-		if (stack[i] > max)
-			max = stack[i];
-		i++;
-	}
-	return (max);
-}
-
-static int	find_min(int *stack)
-{
-	int	i;
-	int	min;
-
-	i = 0;
-	if (stack_len(stack) == 0)
-		return (0);
-	min = stack[i];
-	while(stack[i] != -1)
-	{
-		if (stack[i] < min)
-			min = stack[i];
-		i++;
-	}
-	return (min);
 }
 
 int	find_gap(int nb, int *stack_B)
@@ -248,6 +265,19 @@ int	rotate(int ra, int rb, int *stack_A, int *stack_B)
 	}
 	return (ops);
 }
+int	is_sorted(int *stack)
+{
+	int	i;
+
+	i = 1;
+	while (stack[i] != -1)
+	{
+		if (stack[i] > stack[i - 1])
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 int	CALCULATE_find_current_position(int current, int *stack_A)
 {
@@ -327,7 +357,7 @@ int	CALCULATE_find_cheapest_nb(int c_min, int c_max, int *stack_A, int *stack_B)
 
 	i = 0;
 	cheapest = 1000000;
-	while (stack_A[i] != -1) // seems to be working perfectly now. Next thing to build is actual rrr and rr.
+	while (stack_A[i] != -1)
 	{
 		current_nb = CALCULATE_find_smallest_current(c_min, c_max, &i, stack_A);
 		if (current_nb == -1)
@@ -347,7 +377,80 @@ int	CALCULATE_find_cheapest_nb(int c_min, int c_max, int *stack_A, int *stack_B)
 	return (cheapest_position);
 }
 
-int	algorithm(int chunck_size, int amount, int *stack_A, int *stack_B)
+int	size_mini_under_3(int amount, int *stack)
+{
+	if (amount <= 0)
+		return (-1);
+	else if (amount == 1)
+		return (0);
+	else
+	{
+		if (stack[0] < stack[1])
+		{
+			apply_swap(stack);
+			write(1, "sa\n", 3);
+			return (1);
+		}
+		return (0);
+	}
+}
+
+int	size_mini_algorithm(int amount, int *stack)
+{
+	int max;
+	int min;
+	int ops;
+
+	ops = 0;
+	if(is_sorted(stack))
+		return (0);
+	if (amount < 3)
+		return (size_mini_under_3(amount, stack));
+	max = find_max(stack);
+	min = find_min(stack);
+	if ((stack[0] == min && stack[2] == max) ||
+		(stack[2] == min && stack[1] == max) || stack[0] == max)
+	{
+		apply_swap(stack);
+		write(1, "sa\n", 3);
+		ops += 1;
+	}
+	while (stack[0] != max)
+	{
+		apply_rotation(stack);
+		write(1, "ra\n", 3);
+		ops += 1;
+	}
+	return (ops);
+}
+
+int	size_small_algorithm(int *stack_A, int *stack_B)
+{
+	int	min;
+	int position_A;
+	int position_B;
+	int ra;
+	int rb;
+	int ops;
+
+	ops = 0;
+	while (stack_len(stack_A) != 3)
+	{
+		min = find_min(stack_A);
+		position_A = CALCULATE_find_current_position(min, stack_A);
+		ra = CALCULATE_rotation_or_reverse(position_A, stack_A);
+		position_B = find_gap(min, stack_B);
+		rb = CALCULATE_rotation_or_reverse(position_B, stack_B);
+		ops += rotate(ra, rb, stack_A, stack_B);
+		ops += apply_push(stack_B, stack_A);
+		write(1, "pa\n", 3);
+	}
+	ops += size_mini_algorithm(stack_len(stack_A), stack_A);
+	ops += move_all_to_other(stack_A, stack_B);
+	return (ops);
+}
+
+int	size_big_algorithm(int chunck_size, int amount, int *stack_A, int *stack_B)
 {
 	// int	chunck_size;
 	int	ops;			//amount of operations
@@ -397,6 +500,19 @@ int	algorithm(int chunck_size, int amount, int *stack_A, int *stack_B)
 	return (ops);
 }
 
+int	algorithm(int chunck_size, int amount, int *stack_A, int *stack_B)
+{
+	if(is_sorted(stack_A))
+		return (0);
+	if (amount > 15)
+		return (size_big_algorithm(chunck_size, amount, stack_A, stack_B));
+	else if (amount > 3)
+		return (size_small_algorithm(stack_A, stack_B));
+	else if (amount > 0)
+		return (size_mini_algorithm(amount, stack_A));
+	return (-1);
+}
+
 int main()
 {
 	int i = 0;
@@ -406,82 +522,91 @@ int main()
         printf("Memory allocation failed\n");
         return 1;
     }
-	// int values[] = {16, 2, 4, 0, 15, 9, 12, 1, 3, 10, 6, 8, 14, 17, 7, 13, 5, 11, -1};
-	// int values[] = {194, 27, 188, 132, 442, 432, 57, 82, 54, 417, 105, 444, 156, 322, 469, 219, 368, 275, 324, 189, 126, 217, 87, 5, 173, 28, 394, 68, 213, 445, 102, 471, 176, 210, 373, 240, 382, 472, 377, 181, 485, 153, 455, 231, 302, 157, 118, 360, 174, 277, 155, 30, 374, 356, 203, 318, 14, 438, 187, 141, 160, 398, 248, 330, 376, 59, 456, 147, 437, 258, 264, 367, 473, 225, 80, 139, 108, 339, 232, 280, 278, 242, 393, 49, 185, 361, 300, 353, 410, 265, 193, 355, 75, 218, 347, 37, 7, 365, 305, 462, 66, 9, 175, 409, 224, 349, 321, 158, 72, 387, 200, 488, 319, 492, 370, 93, 212, 427, 109, 420, 497, 208, 424, 143, 64, 466, 422, 206, 348, 487, 4, 494, 15, 183, 448, 333, 234, 196, 101, 246, 358, 392, 429, 53, 463, 452, 178, 36, 419, 294, 214, 235, 384, 202, 35, 256, 268, 447, 0, 154, 145, 317, 297, 346, 309, 45, 359, 252, 281, 195, 220, 121, 421, 273, 65, 19, 85, 81, 380, 334, 325, 18, 99, 69, 415, 291, 148, 404, 350, 136, 8, 21, 254, 340, 407, 270, 107, 222, 400, 341, 84, 149, 61, 464, 286, 489, 363, 128, 304, 425, 441, 227, 262, 408, 287, 211, 279, 381, 78, 92, 389, 320, 167, 1, 483, 63, 496, 236, 95, 323, 16, 484, 241, 117, 342, 386, 391, 124, 162, 423, 186, 308, 165, 314, 22, 47, 315, 267, 228, 91, 459, 375, 83, 336, 476, 388, 433, 191, 131, 60, 23, 260, 144, 43, 164, 192, 152, 450, 379, 197, 307, 312, 230, 190, 301, 216, 431, 106, 79, 10, 44, 111, 11, 385, 481, 55, 58, 70, 244, 52, 454, 51, 402, 428, 168, 138, 298, 29, 486, 261, 96, 299, 135, 161, 271, 125, 335, 477, 13, 146, 285, 169, 50, 48, 412, 449, 3, 110, 289, 42, 89, 453, 390, 33, 133, 434, 179, 470, 34, 411, 430, 436, 282, 413, 151, 113, 498, 223, 293, 150, 403, 97, 76, 198, 239, 460, 243, 238, 458, 490, 383, 399, 499, 207, 352, 67, 418, 245, 98, 378, 251, 73, 170, 237, 204, 180, 257, 405, 451, 253, 395, 326, 24, 478, 364, 461, 38, 416, 221, 495, 205, 137, 414, 249, 311, 104, 120, 74, 482, 226, 396, 288, 327, 351, 331, 344, 2, 32, 129, 337, 468, 369, 479, 142, 303, 25, 266, 259, 233, 100, 491, 426, 465, 439, 435, 12, 46, 474, 177, 295, 172, 296, 26, 440, 272, 338, 112, 116, 329, 313, 306, 255, 371, 171, 103, 345, 446, 276, 250, 62, 397, 290, 401, 41, 123, 114, 480, 215, 493, 343, 310, 316, 6, 247, 332, 88, 163, 269, 357, 127, 166, 40, 366, 130, 199, 475, 328, 354, 20, 140, 115, 457, 159, 283, 229, 122, 372, 263, 209, 284, 184, 86, 362, 31, 90, 467, 182, 77, 71, 406, 119, 443, 274, 94, 292, 17, 134, 201, 56, 39, -1};
-    // int num_values = sizeof(values) / sizeof(values[0]);
+	// int values[] = {1, 4, 0, 2, -1};
+	int values[] = {479, 7, 101, 278, 255, 409, 186, 289, 210, 405, 233, 192, 70, 158, 346, 368, 88, 331, 188, 399, 316, 327, 448, 221, 115, 319, 459, 436, 458, 445, 134, 422, 407, 28, 112, 111, 296, 212, 451, 126, 251, 95, 219, 196, 401, 166, 140, 370, 469, 178, 365, 97, 357, 156, 496, 353, 276, 393, 396, 151, 240, 44, 317, 47, 237, 293, 320, 100, 425, 332, 413, 315, 228, 392, 105, 9, 31, 118, 282, 238, 476, 11, 222, 1, 466, 442, 200, 37, 261, 345, 48, 286, 116, 452, 172, 427, 300, 109, 132, 107, 263, 260, 435, 245, 41, 193, 27, 421, 177, 376, 382, 14, 272, 51, 34, 69, 165, 379, 29, 490, 280, 359, 417, 239, 372, 464, 468, 330, 270, 264, 329, 489, 284, 412, 164, 477, 106, 16, 497, 120, 189, 294, 397, 67, 471, 56, 281, 301, 133, 287, 26, 122, 18, 443, 371, 181, 481, 25, 35, 247, 248, 312, 313, 39, 225, 344, 17, 275, 456, 446, 349, 135, 176, 279, 364, 403, 117, 216, 386, 153, 92, 483, 131, 128, 437, 383, 334, 5, 72, 75, 406, 87, 36, 214, 55, 453, 340, 139, 395, 3, 333, 455, 465, 71, 324, 144, 269, 302, 108, 201, 351, 381, 387, 335, 215, 283, 423, 298, 292, 13, 58, 54, 174, 291, 478, 450, 229, 373, 22, 408, 297, 414, 155, 454, 227, 285, 258, 338, 343, 83, 231, 162, 253, 57, 491, 439, 197, 449, 4, 152, 147, 441, 398, 493, 63, 378, 369, 303, 339, 194, 385, 60, 43, 234, 336, 267, 262, 424, 170, 328, 38, 76, 377, 142, 218, 259, 150, 337, 274, 252, 463, 168, 185, 141, 305, 426, 84, 62, 89, 461, 171, 195, 183, 482, 318, 494, 257, 102, 46, 223, 495, 217, 473, 375, 123, 77, 350, 363, 205, 486, 68, 99, 53, 288, 323, 390, 419, 143, 265, 418, 114, 309, 30, 179, 416, 15, 23, 352, 391, 167, 173, 389, 310, 8, 492, 366, 160, 20, 207, 295, 224, 304, 59, 159, 52, 367, 314, 498, 361, 220, 308, 266, 249, 90, 198, 65, 432, 180, 299, 104, 86, 402, 355, 113, 347, 82, 242, 12, 2, 342, 163, 148, 400, 236, 232, 80, 311, 110, 33, 271, 157, 45, 430, 21, 307, 277, 358, 488, 98, 81, 124, 127, 202, 433, 404, 191, 410, 209, 485, 326, 388, 199, 190, 380, 411, 130, 119, 440, 73, 480, 243, 384, 484, 475, 428, 10, 6, 431, 66, 254, 154, 161, 250, 420, 175, 268, 182, 341, 447, 321, 241, 24, 438, 462, 129, 204, 273, 121, 61, 64, 208, 149, 474, 444, 374, 146, 145, 211, 136, 354, 103, 226, 0, 85, 362, 94, 138, 206, 91, 472, 49, 360, 42, 457, 74, 325, 256, 348, 460, 169, 50, 246, 93, 213, 32, 290, 322, 184, 187, 79, 499, 125, 470, 306, 487, 415, 40, 78, 356, 394, 19, 230, 96, 434, 203, 235, 244, 467, 429, 137, -1};
+    int num_values = sizeof(values) / sizeof(values[0]);
 
-    // for (i = 0; i < num_values; i++)
-	// {
-    //     stackA[i] = values[i];
-	// }
-
-	// int *stackB = malloc(1000 * sizeof(int));
-
-    // if (!stackB) {
-    //     printf("Memory allocation failed\n");
-    //     return 1;
-    // }
-    // int valuesb[] = {-1};
-    // num_values = sizeof(values) / sizeof(values[0]);
-
-    // for (i = 0; i < num_values; i++)
-	// {
-    //     stackB[i] = valuesb[i];
-	// }
-
-	// i = 0;
-	// while (stackA[i] != -1)
-	// 	printf("%d ", stackA[i++]);
-	// printf("%d ", stackA[i]);
-	// printf("\n");
-	// i = 0;
-	// while (stackB[i] != -1)
-	// 	printf("%d ", stackB[i++]);
-	// printf("%d ", stackB[i]);
-	// printf("\n");
-	// printf("\n");
-
-	int chunck_size = 1;
-	while(chunck_size < 101)
+    for (i = 0; i < num_values; i++)
 	{
-		int *stackA = malloc(1000 * sizeof(int));
-		int values[] = {86, 40, 91, 8, 21, 59, 90, 35, 46, 32, 3, 19, 5, 81, 33, 89, 77, 48, 28, 80, 44, 65, 73, 70, 45, 22, 85, 14, 94, 71, 60, 6, 74, 36, 17, 58, 82, 76, 99, 24, 42, 69, 31, 68, 16, 41, 96, 78, 84, 66, 98, 97, 47, 56, 88, 93, 20, 49, 63, 38, 55, 92, 72, 27, 12, 67, 7, 13, 4, 52, 0, 18, 95, 29, 23, 9, 37, 64, 10, 30, 34, 11, 43, 39, 57, 15, 75, 87, 54, 50, 25, 83, 62, 2, 61, 26, 79, 51, 53, 1, -1};
-		int num_values = sizeof(values) / sizeof(values[0]);
-
-		for (i = 0; i < num_values; i++)
-		{
-			stackA[i] = values[i];
-		}
-
-		int *stackB = malloc(1000 * sizeof(int));
-
-		if (!stackB) {
-			printf("Memory allocation failed\n");
-			return 1;
-		}
-		int valuesb[] = {-1};
-		num_values = sizeof(values) / sizeof(values[0]);
-
-		for (i = 0; i < num_values; i++)
-		{
-			stackB[i] = valuesb[i];
-		}
-		int ops = algorithm(chunck_size, stack_len(stackA), stackA, stackB);
-		printf("chunck size %i, Operations: %d\n", chunck_size, ops);
-		free(stackA);
-		free(stackB);
-		chunck_size++;
+        stackA[i] = values[i];
 	}
 
-	// i = 0;
-	// while (stackA[i] != -1)
-	// 	printf("%d ", stackA[i++]);
-	// printf("%d ", stackA[i]);
-	// printf("\n");
-	// i = 0;
-	// while (stackB[i] != -1)
-	// 	printf("%d ", stackB[i++]);
-	// printf("%d ", stackB[i]);
-	// printf("\n\n");
+	int *stackB = malloc(1000 * sizeof(int));
+
+    if (!stackB) {
+        printf("Memory allocation failed\n");
+        return 1;
+    }
+    int valuesb[] = {-1};
+    num_values = sizeof(values) / sizeof(values[0]);
+
+    for (i = 0; i < num_values; i++)
+	{
+        stackB[i] = valuesb[i];
+	}
+
+	i = 0;
+	while (stackA[i] != -1)
+		printf("%d ", stackA[i++]);
+	printf("%d ", stackA[i]);
+	printf("\n");
+	i = 0;
+	while (stackB[i] != -1)
+		printf("%d ", stackB[i++]);
+	printf("%d ", stackB[i]);
+	printf("\n");
+	printf("\n");
+
+	int ops = algorithm(500, stack_len(stackA), stackA, stackB);
+
+	i = 0;
+	while (stackA[i] != -1)
+		printf("%d ", stackA[i++]);
+	printf("%d ", stackA[i]);
+	printf("\n");
+	i = 0;
+	while (stackB[i] != -1)
+		printf("%d ", stackB[i++]);
+	printf("%d ", stackB[i]);
+	printf("\n\n");
+	printf("Operations: %d", ops);
 	return 0;
 }
+
+// int main()
+// {
+// 	int i = 0;
+
+// 	int chunck_size = 1;
+// 	while(chunck_size < 101)
+// 	{
+// 		int *stackA = malloc(1000 * sizeof(int));
+// 		int values[] = {15, 93, 84, 29, 69, 83, 73, 41, 80, 71, 81, 20, 42, 52, 1, 50, 70, 95, 7, 68, 35, 62, 2, 40, 6, 3, 43, 23, 89, 51, 25, 9, 55, 53, 14, 67, 5, 99, 4, 22, 24, 66, 65, 59, 48, 8, 63, 39, 90, 33, 46, 76, 45, 92, 26, 36, 58, 56, 54, 34, 18, 75, 38, 13, 12, 37, 94, 16, 28, 96, 79, 61, 77, 44, 21, 32, 85, 19, 31, 57, 10, 97, 74, 82, 0, 72, 91, 47, 78, 87, 98, 11, 88, 86, 49, 30, 27, 64, 17, 60, -1};
+// 		int num_values = sizeof(values) / sizeof(values[0]);
+
+// 		for (i = 0; i < num_values; i++)
+// 		{
+// 			stackA[i] = values[i];
+// 		}
+
+// 		int *stackB = malloc(1000 * sizeof(int));
+
+// 		if (!stackB) {
+// 			printf("Memory allocation failed\n");
+// 			return 1;
+// 		}
+// 		int valuesb[] = {-1};
+// 		num_values = sizeof(values) / sizeof(values[0]);
+
+// 		for (i = 0; i < num_values; i++)
+// 		{
+// 			stackB[i] = valuesb[i];
+// 		}
+// 		int ops = algorithm(chunck_size, stack_len(stackA), stackA, stackB);
+// 		printf("chunck size %i, Operations: %d\n", chunck_size, ops);
+// 		free(stackA);
+// 		free(stackB);
+// 		chunck_size++;
+// 	}
+// 	return 0;
+// }
