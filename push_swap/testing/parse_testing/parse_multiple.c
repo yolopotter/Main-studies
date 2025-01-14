@@ -6,11 +6,11 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 15:54:16 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 14:24:20 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/09 13:19:20 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "parse.h"
 
 int	validate_input_multiple(char **av)
 {

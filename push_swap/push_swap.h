@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:51:35 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 13:20:39 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:10:20 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <unistd.h> //write
 # include <math.h> //min
 # include <limits.h>
-// # include "parse.h"
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
 //parse
@@ -35,9 +34,35 @@ int	validate_input_multiple(char **av);
 int	*parse_multiple(int ac, char **av);
 int	*normalize_sequence(int *src, int len);
 int	check_repeat(int *arr, int len);
-// int	stack_len(int *stack);
-// int	apply_push(int *dst, int *src);
-// int	apply_reverse_rotation(int *stack);
-// int	apply_rotation(int *stack);
+
+//action
+int	rotate(int ra, int rb, int *stack_A, int *stack_B);
+int	move_all_to_other(int *dst, int *src);
+
+//operators
+int	apply_swap(int *src);
+int	apply_push(int *dst, int *src);
+int	apply_reverse_rotation(int *stack);
+int	apply_rotation(int *stack);
+
+//utils
+int	stack_len(int *stack);
+int	find_max(int *stack);
+int	find_min(int *stack);
+int	is_sorted(int *stack);
+int	find_gap(int nb, int *stack_B);
+
+//calc
+int	CALCULATE_find_current_position(int current, int *stack_A);
+int	CALCULATE_rotation_or_reverse(int pos, int *stack);
+int	CALCULATE_find_smallest_current(int c_min, int c_max, int *i, int *stack_A);
+int	CALCULATE_price(int ra, int rb);
+int	CALCULATE_find_cheapest_nb(int c_min, int c_max, int *stack_A, int *stack_B);
+
+//algos
+int	size_mini_under_3(int amount, int *stack);
+int	size_mini_algorithm(int amount, int *stack);
+int	size_small_algorithm(int *stack_A, int *stack_B);
+int	size_big_algorithm(int amount, int *stack_A, int *stack_B);
 
 #endif

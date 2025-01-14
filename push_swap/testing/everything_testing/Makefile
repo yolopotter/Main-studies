@@ -9,15 +9,9 @@ SRCS = \
 		ALGO_main.c \
 		parse_multiple.c \
 		parse_single.c \
-		parse_normalize.c \
-		parse_utils.c \
-		parsing.c \
-		rotation.c \
-		operators.c \
-		global_utils.c \
-		calculation.c \
-		algo_small.c \
-		algo_big.c
+		parsing_normalize.c \
+		parsing_utils.c \
+		parsing.c
 
 # Header files
 HDRS = $(wildcard *.h)
@@ -26,7 +20,7 @@ HDRS = $(wildcard *.h)
 OBJS = $(SRCS:.c=.o)
 
 # Output executable
-NAME = push_swap
+NAME = a.out
 
 # Rules
 all: $(NAME) clean
