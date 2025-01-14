@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 15:09:55 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 15:10:10 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:46:54 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	size_big_algorithm(int amount, int *stack_A, int *stack_B)
 		ops += rotate(ra, rb, stack_A, stack_B);
 		apply_push(stack_B, stack_A);
 		ops++;
-		// write(1, "pa\n", 3);
+		write(1, "pa\n", 3);
 		j++;
 	}
 	ops += move_all_to_other(stack_A, stack_B);

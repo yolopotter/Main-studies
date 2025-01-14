@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 15:04:39 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 15:25:30 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:47:13 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	size_mini_under_3(int amount, int *stack)
 		if (stack[0] < stack[1])
 		{
 			apply_swap(stack);
-			// write(1, "sa\n", 3);
+			write(1, "sa\n", 3);
 			return (1);
 		}
 		return (0);

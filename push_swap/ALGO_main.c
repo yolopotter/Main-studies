@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:24:14 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 15:19:11 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:12:56 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	move_all_to_other(int *dst, int *src)
 	while (src[0] != min)
 	{
 		apply_rotation(src);
+		write(1, "rb\n", 3);
 		ops++;
 	}
 	while (len > 0)

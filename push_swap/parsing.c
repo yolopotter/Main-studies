@@ -6,11 +6,30 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:24:37 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 14:24:39 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:09:25 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+void reverse_array(int *arr) {
+    if (arr == NULL) {
+        return; // Handle null pointer
+    }
+
+    // Find the length of the array (excluding the -1 terminator)
+    int length = 0;
+    while (arr[length] != -1) {
+        length++;
+    }
+
+    // Swap elements from the start and end moving towards the center
+    for (int i = 0; i < length / 2; i++) {
+        int temp = arr[i];
+        arr[i] = arr[length - 1 - i];
+        arr[length - 1 - i] = temp;
+    }
+}
 
 int	*parsing(int ac, char **av)
 {
@@ -39,5 +58,6 @@ int	*parsing(int ac, char **av)
 	nb_arr = normalize_sequence(nb_arr, len);
 	if (!nb_arr)
 		return (NULL);
+	reverse_array(nb_arr);
 	return (nb_arr);
 }
