@@ -17,7 +17,8 @@ SRCS = \
 		global_utils.c \
 		calculation.c \
 		algo_small.c \
-		algo_big.c
+		algo_big.c \
+		calc_utils.c
 
 # Header files
 HDRS = $(wildcard *.h)

@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:51:35 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 14:40:26 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:26:12 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ int	*normalize_sequence(int *src, int len);
 int	check_repeat(int *arr, int len);
 
 //action
-int	rotate(int ra, int rb, int *stack_A, int *stack_B);
-int	move_all_to_other(int *stack_A, int *stack_B);
+void	rotate(int ra, int rb, int *stack_A, int *stack_B);
+void	move_all_to_other(int *stack_A, int *stack_B);
 
 //operators
 int	apply_swap(int *src);
@@ -55,9 +55,12 @@ int	find_gap(int nb, int *stack_B);
 //calc
 int	CALCULATE_find_current_position(int current, int *stack_A);
 int	CALCULATE_rotation_or_reverse(int pos, int *stack);
-int	CALCULATE_find_smallest_current(int c_min, int c_max, int *i, int *stack_A);
+int	CALCULATE_find_smallest_current(int c_max, int *i, int *stack_A);
 int	CALCULATE_price(int ra, int rb);
 int	CALCULATE_find_cheapest_nb(int c_max, int *stack_A, int *stack_B);
+//calc utils
+int	ft_abs(int a);
+int	ft_min(int a, int b);
 
 //algos
 int	size_mini_under_3(int amount, int *stack);

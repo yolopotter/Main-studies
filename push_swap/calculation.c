@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:56:27 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 14:41:45 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:25:54 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ int	CALCULATE_rotation_or_reverse(int pos, int *stack)
 	return (rotations);
 }
 
-int	CALCULATE_find_smallest_current(int c_min, int c_max, int *i, int *stack_A)
+int	CALCULATE_find_smallest_current(int c_max, int *i, int *stack_A)
 {
 	while (stack_A[*i] != -1)
 	{
-		if (stack_A[*i] >= c_min && stack_A[*i] <= c_max)
+		if (stack_A[*i] >= 0 && stack_A[*i] <= c_max)
 		{
 			return (stack_A[(*i)++]);
 		}
@@ -70,9 +70,9 @@ int	CALCULATE_price(int ra, int rb)
 
 	delta = ra - rb;
 	if ((ra > 0 && rb > 0) || (ra < 0 && rb < 0))
-		price = abs(delta) + min(abs(ra), abs(rb));
+		price = ft_abs(delta) + ft_min(ft_abs(ra), ft_abs(rb));
 	else
-		price = abs(delta);
+		price = ft_abs(delta);
 	return (price);
 }
 
@@ -82,7 +82,7 @@ int	CALCULATE_find_cheapest_nb(int c_max, int *stack_A, int *stack_B)
 	int	current_nb;
 	int	position_A;
 	int	position_B;
-	int cheapest_position;
+	int cheapest_number;
 	int	ra;
 	int	rb;
 	int	price;
@@ -92,7 +92,7 @@ int	CALCULATE_find_cheapest_nb(int c_max, int *stack_A, int *stack_B)
 	cheapest = 1000000;
 	while (stack_A[i] != -1)
 	{
-		current_nb = CALCULATE_find_smallest_current(0, c_max, &i, stack_A);
+		current_nb = CALCULATE_find_smallest_current(c_max, &i, stack_A);
 		if (current_nb == -1)
 			break ;
 		position_A = CALCULATE_find_current_position(current_nb, stack_A);
@@ -102,9 +102,9 @@ int	CALCULATE_find_cheapest_nb(int c_max, int *stack_A, int *stack_B)
 		price = CALCULATE_price(ra, rb);
 		if (price < cheapest)
 		{
-			cheapest_position = position_A;
+			cheapest_number = current_nb;
 			cheapest = price;
 		}
 	}
-	return (cheapest_position);
+	return (cheapest_number);
 }
