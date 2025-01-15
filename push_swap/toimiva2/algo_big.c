@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 15:09:55 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 14:41:19 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 10:41:18 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	size_big_algorithm(int amount, int *stack_A, int *stack_B)
 	int	ops;			//amount of operations
 	int	position; //position	i;
 	int	current_nb;
+	int	position_A;
+	int	position_B;
 	int	ra;
 	int	rb;
 	int	j;
@@ -25,12 +27,12 @@ int	size_big_algorithm(int amount, int *stack_A, int *stack_B)
 	j = 0;
 	while (j < amount)
 	{
-		position = CALCULATE_find_cheapest_nb(amount - 1, stack_A, stack_B);
+		position = CALCULATE_find_cheapest_nb(0, amount - 1, stack_A, stack_B);
 		current_nb = stack_A[position];
-		position = CALCULATE_find_current_position(current_nb, stack_A);
-		ra = CALCULATE_rotation_or_reverse(position, stack_A);
-		position = find_gap(current_nb, stack_B);
-		rb = CALCULATE_rotation_or_reverse(position, stack_B);
+		position_A = CALCULATE_find_current_position(current_nb, stack_A);
+		ra = CALCULATE_rotation_or_reverse(position_A, stack_A);
+		position_B = find_gap(current_nb, stack_B);
+		rb = CALCULATE_rotation_or_reverse(position_B, stack_B);
 		ops += rotate(ra, rb, stack_A, stack_B);
 		apply_push(stack_B, stack_A);
 		ops++;

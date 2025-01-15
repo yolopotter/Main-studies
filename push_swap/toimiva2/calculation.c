@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:56:27 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 14:41:45 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:58:22 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	CALCULATE_price(int ra, int rb)
 	return (price);
 }
 
-int	CALCULATE_find_cheapest_nb(int c_max, int *stack_A, int *stack_B)
+int	CALCULATE_find_cheapest_nb(int c_min, int c_max, int *stack_A, int *stack_B)
 {
 	int	i;
 	int	current_nb;
@@ -92,7 +92,7 @@ int	CALCULATE_find_cheapest_nb(int c_max, int *stack_A, int *stack_B)
 	cheapest = 1000000;
 	while (stack_A[i] != -1)
 	{
-		current_nb = CALCULATE_find_smallest_current(0, c_max, &i, stack_A);
+		current_nb = CALCULATE_find_smallest_current(c_min, c_max, &i, stack_A);
 		if (current_nb == -1)
 			break ;
 		position_A = CALCULATE_find_current_position(current_nb, stack_A);

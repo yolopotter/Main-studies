@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:24:14 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 14:14:52 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 13:09:28 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int main(int ac, char **av)
         printf("Memory allocation failed\n");
         return 1;
     }
-	
+
     for (i = 0; i < 1001; i++)
 	{
         stackB[i] = -1;

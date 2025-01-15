@@ -6,11 +6,20 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:48:56 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 16:58:53 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 10:24:24 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+void print_array(const int *arr) {
+    int i = 0;
+    while (arr[i] != -1) {
+        printf("%d ", arr[i]);
+        i++;
+    }
+    printf("-1\n"); // Print the terminator for clarity
+}
 
 void reverse_array(int *arr) {
     if (arr == NULL) {
@@ -58,7 +67,11 @@ int	*parsing(int ac, char **av)
 	nb_arr = normalize_sequence(nb_arr, len);
 	if (!nb_arr)
 		return (NULL);
+	printf("before reversing:");
+	print_array(nb_arr);
 	reverse_array(nb_arr); //reverse needs some testing. Its not working right now for more than 3 numbers
+	printf("after reversing:");
+	print_array(nb_arr);
 	return (nb_arr);
 }
 

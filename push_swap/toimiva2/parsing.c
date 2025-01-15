@@ -6,39 +6,38 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:24:37 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 14:20:08 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 12:59:49 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void print_array(const int *arr)
-{
-	int i = 0;
-	while (arr[i] != -1) {
-		printf("%d ", arr[i]);
-		i++;
-	}
-	printf("-1\n"); // Print the terminator for clarity
+void print_array(const int *arr) {
+    int i = 0;
+    while (arr[i] != -1) {
+        printf("%d ", arr[i]);
+        i++;
+    }
+    printf("-1\n"); // Print the terminator for clarity
 }
 
-void reverse_array(int *arr)
-{
-	int	i;
-	int	len;
-	int	temp;
+void reverse_array(int *arr) {
+    if (arr == NULL) {
+        return; // Handle null pointer
+    }
 
-	if (arr == NULL)
-		return ;
-	len = stack_len(arr);
-	i = 0;
-	while (i < len / 2)
-	{
-		temp = arr[i];
-		arr[i] = arr[len - 1 - i];
-		arr[len - 1 - i] = temp;
-		i++;
-	}
+    // Find the length of the array (excluding the -1 terminator)
+    int length = 0;
+    while (arr[length] != -1) {
+        length++;
+    }
+
+    // Swap elements from the start and end moving towards the center
+    for (int i = 0; i < length / 2; i++) {
+        int temp = arr[i];
+        arr[i] = arr[length - 1 - i];
+        arr[length - 1 - i] = temp;
+    }
 }
 
 int	*parsing(int ac, char **av)

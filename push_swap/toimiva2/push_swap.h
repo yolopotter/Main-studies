@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:51:35 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 14:40:26 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 12:01:31 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	CALCULATE_find_current_position(int current, int *stack_A);
 int	CALCULATE_rotation_or_reverse(int pos, int *stack);
 int	CALCULATE_find_smallest_current(int c_min, int c_max, int *i, int *stack_A);
 int	CALCULATE_price(int ra, int rb);
-int	CALCULATE_find_cheapest_nb(int c_max, int *stack_A, int *stack_B);
+int	CALCULATE_find_cheapest_nb(int c_min, int c_max, int *stack_A, int *stack_B);
 
 //algos
 int	size_mini_under_3(int amount, int *stack);
