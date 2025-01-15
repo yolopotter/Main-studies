@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 15:54:16 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 14:24:20 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 21:53:44 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	validate_input_multiple(char **av)
 	return (1);
 }
 
-int	*parse_multiple(int ac, char **av)
+int	*extract_multiple(int ac, char **av)
 {
 	int	i;
 	int	*nb_arr;
@@ -47,5 +47,5 @@ int	*parse_multiple(int ac, char **av)
 	}
 	if (!check_repeat(nb_arr, i - 1))
 		return (NULL);
-	return(nb_arr);
+	return (nb_arr);
 }

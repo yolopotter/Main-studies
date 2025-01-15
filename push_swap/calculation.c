@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:56:27 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 16:25:54 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 21:06:48 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,35 +76,35 @@ int	CALCULATE_price(int ra, int rb)
 	return (price);
 }
 
+void	CALCULATE_ra_rb(t_calc *calc, int *stack_A, int *stack_B)
+{
+	int position;
+
+	position = CALCULATE_find_current_position(calc->current_nb, stack_A);
+	calc->ra = CALCULATE_rotation_or_reverse(position, stack_A);
+	position = find_gap(calc->current_nb, stack_B);
+	calc->rb = CALCULATE_rotation_or_reverse(position, stack_B);
+}
+
 int	CALCULATE_find_cheapest_nb(int c_max, int *stack_A, int *stack_B)
 {
 	int	i;
-	int	current_nb;
-	int	position_A;
-	int	position_B;
-	int cheapest_number;
-	int	ra;
-	int	rb;
-	int	price;
-	int cheapest;
+	t_calc calc;
 
 	i = 0;
-	cheapest = 1000000;
+	calc.cheapest = 1000000;
 	while (stack_A[i] != -1)
 	{
-		current_nb = CALCULATE_find_smallest_current(c_max, &i, stack_A);
-		if (current_nb == -1)
+		calc.current_nb = CALCULATE_find_smallest_current(c_max, &i, stack_A);
+		if (calc.current_nb == -1)
 			break ;
-		position_A = CALCULATE_find_current_position(current_nb, stack_A);
-		ra = CALCULATE_rotation_or_reverse(position_A, stack_A);
-		position_B = find_gap(current_nb, stack_B);
-		rb = CALCULATE_rotation_or_reverse(position_B, stack_B);
-		price = CALCULATE_price(ra, rb);
-		if (price < cheapest)
+		CALCULATE_ra_rb(&calc, stack_A, stack_B);
+		calc.price = CALCULATE_price(calc.ra, calc.rb);
+		if (calc.price < calc.cheapest)
 		{
-			cheapest_number = current_nb;
-			cheapest = price;
+			calc.cheapest_number = calc.current_nb;
+			calc.cheapest = calc.price;
 		}
 	}
-	return (cheapest_number);
+	return (calc.cheapest_number);
 }

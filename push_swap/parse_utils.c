@@ -1,16 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 12:35:14 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 14:24:27 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 21:54:15 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+int	is_num(char c)
+{
+	if ((c >= '0' && c <= '9') || c == '-')
+		return (1);
+	return (0);
+}
 
 int	is_space(char c)
 {
@@ -77,11 +84,4 @@ int	ft_atoi(char *str, int *i, int *error)
 		(*i)++;
 	}
 	return (res * sign);
-}
-
-int	is_num(char c)
-{
-	if ((c >= '0' && c <= '9') || c == '-')
-		return (1);
-	return (0);
 }

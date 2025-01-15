@@ -8,7 +8,8 @@
 		"cstdint": "c",
 		"functional": "c",
 		"limits.h": "c",
-		"libft.h": "c"
+		"libft.h": "c",
+		"algorithm": "c"
 	},
 	"cmake.sourceDirectory": "/home/vallu/Coding/Main-studies/fdf/lib/MLX42"
 }

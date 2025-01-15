@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:49:02 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 14:49:12 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 21:19:47 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	apply_swap(int *src)
 	src[len - 2] = temp;
 	return (1);
 }
+
 int	apply_push(int *dst, int *src)
 {
 	int	len_src;

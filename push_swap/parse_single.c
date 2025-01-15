@@ -6,13 +6,12 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 12:36:48 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 14:24:22 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 21:56:12 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-// len returns amount of numbers 1 2 3 4 is len = 4
 int	arr_len(char *arr)
 {
 	int	i;
@@ -33,7 +32,7 @@ int	arr_len(char *arr)
 	return (count);
 }
 
-int *parse_single(char *arr)
+int *extract_single(char *arr)
 {
 	int	i;
 	int	j;

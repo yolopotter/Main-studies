@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 # Source files
 SRCS = \
-		ALGO_main.c \
+		algo_main.c \
 		parse_multiple.c \
 		parse_single.c \
 		parse_normalize.c \
@@ -18,7 +18,7 @@ SRCS = \
 		calculation.c \
 		algo_small.c \
 		algo_big.c \
-		calc_utils.c
+		calculation_utils.c
 
 # Header files
 HDRS = $(wildcard *.h)

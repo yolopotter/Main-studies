@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:51:54 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 15:06:47 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/15 22:17:03 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	stack_len(int *stack)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while(stack[len] != -1)
@@ -29,7 +29,7 @@ int	find_max(int *stack)
 
 	i = 0;
 	max = 0;
-	while(stack[i] != -1)
+	while (stack[i] != -1)
 	{
 		if (stack[i] > max)
 			max = stack[i];
@@ -47,7 +47,7 @@ int	find_min(int *stack)
 	if (stack_len(stack) == 0)
 		return (0);
 	min = stack[i];
-	while(stack[i] != -1)
+	while (stack[i] != -1)
 	{
 		if (stack[i] < min)
 			min = stack[i];
@@ -70,28 +70,28 @@ int	is_sorted(int *stack)
 	return (1);
 }
 
-int	find_gap(int nb, int *stack_B)
+int	find_gap(int nb, int *stack)
 {
 	int	i;
 	int	max;
 	int	min;
 
 	i = 0;
-	max = find_max(stack_B);
-	min = find_min(stack_B);
-	while(stack_B[i] != -1)
+	max = find_max(stack);
+	min = find_min(stack);
+	while(stack[i] != -1)
 	{
 		if (nb > max || nb < min)
 		{
 			i = 0;
-			while (stack_B[i] != -1)
+			while (stack[i] != -1)
 			{
-				if(stack_B[i] == max)
+				if(stack[i] == max)
 					return (i);
 				i++;
 			}
 		}
-		if (nb > stack_B[i] && nb < stack_B[i + 1])
+		if (nb > stack[i] && nb < stack[i + 1])
 			return (i);
 		i++;
 	}
