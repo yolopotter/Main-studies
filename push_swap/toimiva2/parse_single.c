@@ -6,13 +6,12 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 12:36:48 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 14:24:22 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:08:06 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-// len returns amount of numbers 1 2 3 4 is len = 4
 int	arr_len(char *arr)
 {
 	int	i;
@@ -22,24 +21,24 @@ int	arr_len(char *arr)
 	count = 0;
 	while (arr[i])
 	{
-		while (arr[i] == ' ')
+		while (is_space(arr[i]))
 			i++;
 		while (is_num(arr[i]))
 			i++;
 		count++;
-		while (arr[i] == ' ')
+		while (is_space(arr[i]))
 			i++;
 	}
 	return (count);
 }
 
-int *parse_single(char *arr)
+int	*extract_single(char *arr)
 {
 	int	i;
 	int	j;
 	int	nb;
 	int	*nb_arr;
-	int error;
+	int	error;
 
 	i = 0;
 	j = 0;
@@ -49,7 +48,7 @@ int *parse_single(char *arr)
 		return (NULL);
 	while (arr[i])
 	{
-		nb = ft_atoi(arr, &i, &error);
+		nb = ft_atoi_error(arr, &i, &error);
 		if (error)
 			return (NULL);
 		nb_arr[j] = nb;
@@ -63,8 +62,9 @@ int *parse_single(char *arr)
 int	validate_input_single(char *str)
 {
 	int	i;
+
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		while (is_space(str[i]))
 			i++;

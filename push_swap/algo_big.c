@@ -6,30 +6,55 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 15:09:55 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 12:04:55 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 17:05:12 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	move_all_to_other(int *stack_a, int *stack_b)
+void	rotate_to_final_pos(int *stack_a)
 {
-	int	len;
-	int	min;
+	int	nb;
+	int	position;
+	int	ra;
 
-	len = 0;
-	min = find_min(stack_b);
-	len = stack_len(stack_b);
-	while (stack_b[0] != min)
+	nb = find_min(stack_a);
+	position = calc_find_current_position(nb, stack_a);
+	ra = calc_rotation_or_reverse(position, stack_a);
+	while (ra != 0)
 	{
-		apply_rotation(stack_b);
-		ft_putstr_fd("rb\n", 1);
+		if (ra < 0)
+		{
+			apply_reverse_rotation(stack_a);
+			ra++;
+			ft_putstr_fd("rra\n", 1);
+		}
+		else
+		{
+			apply_rotation(stack_a);
+			ra--;
+			ft_putstr_fd("ra\n", 1);
+		}
 	}
-	while (len > 0)
+}
+
+void	move_all_to_other(int amount, int *stack_b, int *stack_a) // merge this somehow with the other one
+{
+	int		j;
+	t_calc	calc;
+
+	j = 0;
+	while (j < amount)
 	{
+		calc.current_nb = calc_find_cheapest_nb_in_B(amount - 1, stack_b, stack_a);
+		calc.position = calc_find_current_position(calc.current_nb, stack_b);
+		calc.rb = calc_rotation_or_reverse(calc.position, stack_b);
+		calc.position = find_gap_descending(calc.current_nb, stack_a);
+		calc.ra = calc_rotation_or_reverse(calc.position, stack_a);
+		rotate(calc.ra, calc.rb, stack_a, stack_b);
 		apply_push(stack_a, stack_b);
 		ft_putstr_fd("pa\n", 1);
-		len--;
+		j++;
 	}
 }
 
@@ -39,9 +64,9 @@ int	size_big_algorithm(int amount, int *stack_a, int *stack_b)
 	t_calc	calc;
 
 	j = 0;
-	while (j < amount)
+	while (j < amount - 3)
 	{
-		calc.current_nb = calc_find_cheapest_nb(amount - 1, stack_a, stack_b);
+		calc.current_nb = calc_find_cheapest_nb(amount - 4, stack_a, stack_b);
 		calc.position = calc_find_current_position(calc.current_nb, stack_a);
 		calc.ra = calc_rotation_or_reverse(calc.position, stack_a);
 		calc.position = find_gap(calc.current_nb, stack_b);
@@ -51,7 +76,8 @@ int	size_big_algorithm(int amount, int *stack_a, int *stack_b)
 		ft_putstr_fd("pb\n", 1);
 		j++;
 	}
-	// size_mini_under_3(3, stack_a);
-	move_all_to_other(stack_a, stack_b);
+	size_mini_algorithm(3, stack_a);
+	move_all_to_other(stack_len(stack_b), stack_b, stack_a);
+	rotate_to_final_pos(stack_a);
 	return (1);
 }

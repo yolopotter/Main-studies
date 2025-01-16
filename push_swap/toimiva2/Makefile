@@ -1,12 +1,13 @@
-# Compiler
-CC = cc
+NAME 		= push_swap
+CC 			= cc
+CFLAGS 		= -Wall -Wextra -Werror
+LIBFTDIR 	= ./libft
+LIBFT 		= $(LIBFTDIR)/libft.a
+INCLUDES 	= -I$(LIBFTDIR)
+OBJ_DIR		= obj/
 
-# Compiler flags
-CFLAGS = -Wall -Wextra -Werror
-
-# Source files
 SRCS = \
-		ALGO_main.c \
+		algo_main.c \
 		parse_multiple.c \
 		parse_single.c \
 		parse_normalize.c \
@@ -17,31 +18,30 @@ SRCS = \
 		global_utils.c \
 		calculation.c \
 		algo_small.c \
-		algo_big.c
+		algo_big.c \
+		calculation_utils.c
 
-# Header files
-HDRS = $(wildcard *.h)
+OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 
-# Object files
-OBJS = $(SRCS:.c=.o)
+all: $(NAME)
 
-# Output executable
-NAME = push_swap
+$(LIBFT):
+	$(MAKE) -C $(LIBFTDIR)
 
-# Rules
-all: $(NAME) clean
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT)
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
-
-%.o: %.c $(HDRS)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJ_DIR)%.o: %.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
+	rm -rf $(OBJ_DIR)
+	$(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
 	rm -f $(NAME)
+	$(MAKE) -C $(LIBFTDIR) fclean
 
 re: fclean all
 

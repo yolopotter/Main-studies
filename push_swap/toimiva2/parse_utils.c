@@ -1,16 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 12:35:14 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/14 14:24:27 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:07:20 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+int	is_num(char c)
+{
+	if ((c >= '0' && c <= '9') || c == '-')
+		return (1);
+	return (0);
+}
 
 int	is_space(char c)
 {
@@ -40,7 +47,7 @@ int	check_repeat(int *arr, int len)
 	return (1);
 }
 
-int check_overflow(int sign, long int res, int *error)
+int	check_overflow(int sign, long int res, int *error)
 {
 	if (res > INT_MAX && sign == 1)
 	{
@@ -55,7 +62,7 @@ int check_overflow(int sign, long int res, int *error)
 	return (1);
 }
 
-int	ft_atoi(char *str, int *i, int *error)
+int	ft_atoi_error(char *str, int *i, int *error)
 {
 	int			sign;
 	long int	res;
@@ -69,7 +76,7 @@ int	ft_atoi(char *str, int *i, int *error)
 		(*i)++;
 		sign *= -1;
 	}
-	while(str[*i] && str[*i] != ' ')
+	while (str[*i] && !is_space(str[*i]))
 	{
 		res = res * 10 + str[*i] - '0';
 		if (!check_overflow(sign, res, error))
@@ -77,11 +84,4 @@ int	ft_atoi(char *str, int *i, int *error)
 		(*i)++;
 	}
 	return (res * sign);
-}
-
-int	is_num(char c)
-{
-	if ((c >= '0' && c <= '9') || c == '-')
-		return (1);
-	return (0);
 }
