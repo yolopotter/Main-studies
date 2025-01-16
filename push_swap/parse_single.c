@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 12:36:48 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 21:56:12 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 10:33:18 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int *extract_single(char *arr)
 int	validate_input_single(char *str)
 {
 	int	i;
+
 	i = 0;
 	while(str[i])
 	{
