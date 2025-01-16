@@ -1,42 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   calculation_utils.c                                :+:      :+:    :+:   */
+/*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 14:33:09 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 12:13:35 by vlopatin         ###   ########.fr       */
+/*   Created: 2024/10/31 15:01:45 by vlopatin          #+#    #+#             */
+/*   Updated: 2024/11/12 19:07:48 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
-
-int	calc_find_current_position(int current, int *stack_a)
+int	ft_toupper(int c)
 {
-	int	i;
-
-	i = 0;
-	while (stack_a[i] != -1)
-	{
-		if (stack_a[i] == current)
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-int	ft_min(int a, int b)
-{
-	if (a > b)
-		return (b);
-	return (a);
-}
-
-int	ft_abs(int a)
-{
-	if (a < 0)
-		return (-a);
-	else
-		return (a);
+	if (c >= 'a' && c <= 'z')
+		c -= 32;
+	return (c);
 }

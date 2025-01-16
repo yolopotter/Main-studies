@@ -1,42 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   calculation_utils.c                                :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 14:33:09 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 12:13:35 by vlopatin         ###   ########.fr       */
+/*   Created: 2024/11/04 13:54:43 by vlopatin          #+#    #+#             */
+/*   Updated: 2024/11/12 19:07:00 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	calc_find_current_position(int current, int *stack_a)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int	i;
+	size_t	len;
+	char	*dst;
 
-	i = 0;
-	while (stack_a[i] != -1)
-	{
-		if (stack_a[i] == current)
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-int	ft_min(int a, int b)
-{
-	if (a > b)
-		return (b);
-	return (a);
-}
-
-int	ft_abs(int a)
-{
-	if (a < 0)
-		return (-a);
-	else
-		return (a);
+	if (s1 == NULL || s2 == NULL)
+		return (NULL);
+	len = ft_strlen(s1) + ft_strlen(s2);
+	dst = (char *)ft_calloc(1 + len, sizeof(char));
+	if (!dst)
+		return (NULL);
+	ft_strlcpy(dst, s1, ft_strlen(s1) + 1);
+	ft_strlcat(dst, s2, len + 1);
+	return (dst);
 }

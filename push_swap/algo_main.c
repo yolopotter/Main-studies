@@ -6,60 +6,60 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:24:14 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 22:00:37 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 12:10:23 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	algorithm(int *stack_A, int *stack_B)
+int	algorithm(int *stack_a, int *stack_b)
 {
-	int	stack_A_len;
+	int	stack_a_len;
 
-	stack_A_len = stack_len(stack_A);
-	if(is_sorted(stack_A))
+	stack_a_len = stack_len(stack_a);
+	if (is_sorted(stack_a))
 		return (0);
-	if (stack_A_len > 15)
-		return (size_big_algorithm(stack_A_len, stack_A, stack_B));
-	else if (stack_A_len > 3)
-		return (size_small_algorithm(stack_A, stack_B));
-	else if (stack_A_len > 0)
-		return (size_mini_algorithm(stack_A_len, stack_A));
+	if (stack_a_len > 15)
+		return (size_big_algorithm(stack_a_len, stack_a, stack_b));
+	else if (stack_a_len > 3)
+		return (size_small_algorithm(stack_a, stack_b));
+	else if (stack_a_len > 0)
+		return (size_mini_algorithm(stack_a_len, stack_a));
 	return (-1);
 }
 
-void	fill_stack_B(int *stack_A, int *stack_B)
+void	fill_stack_b(int *stack_a, int *stack_b)
 {
 	int	i;
 
 	i = 0;
-	while (i < (stack_len(stack_A) + 1))
-	stack_B[i++] = -1;
+	while (i < (stack_len(stack_a) + 1))
+		stack_b[i++] = -1;
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-	int	*stack_A;
-	int	*stack_B;
+	int	*stack_a;
+	int	*stack_b;
 
 	if (ac < 2)
 		return (0);
-	stack_A = parsing(ac, av);
-	if(!stack_A)
+	stack_a = parsing(ac, av);
+	if (!stack_a)
 	{
-		write(2, "Error\n", 6);
+		ft_putstr_fd("Error\n", 2);
 		return (1);
 	}
-	stack_B = malloc((stack_len(stack_A) + 1) * sizeof(int));
-	if (!stack_B)
+	stack_b = malloc((stack_len(stack_a) + 1) * sizeof(int));
+	if (!stack_b)
 	{
-		free(stack_A);
-		write(2, "Memory allocation failed\n", 25);
+		free(stack_a);
+		ft_putstr_fd("Memory allocation failed\n", 2);
 		return (1);
 	}
-	fill_stack_B(stack_A, stack_B);
-	algorithm(stack_A, stack_B);
-	free(stack_A);
-	free(stack_B);
+	fill_stack_b(stack_a, stack_b);
+	algorithm(stack_a, stack_b);
+	free(stack_a);
+	free(stack_b);
 	return (0);
 }

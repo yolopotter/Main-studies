@@ -1,42 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   calculation_utils.c                                :+:      :+:    :+:   */
+/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 14:33:09 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 12:13:35 by vlopatin         ###   ########.fr       */
+/*   Created: 2024/11/11 11:31:37 by vlopatin          #+#    #+#             */
+/*   Updated: 2024/11/12 19:05:37 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	calc_find_current_position(int current, int *stack_a)
+void	ft_lstclear(t_list **lst, void (*del)(void*))
 {
-	int	i;
+	t_list	*temp;
 
-	i = 0;
-	while (stack_a[i] != -1)
+	if (!lst || !del)
+		return ;
+	while (*lst != NULL)
 	{
-		if (stack_a[i] == current)
-			return (i);
-		i++;
+		temp = (*lst)->next;
+		del((*lst)->content);
+		free(*lst);
+		*lst = temp;
 	}
-	return (-1);
-}
-
-int	ft_min(int a, int b)
-{
-	if (a > b)
-		return (b);
-	return (a);
-}
-
-int	ft_abs(int a)
-{
-	if (a < 0)
-		return (-a);
-	else
-		return (a);
+	*lst = NULL;
 }

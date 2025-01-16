@@ -1,42 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   calculation_utils.c                                :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 14:33:09 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 12:13:35 by vlopatin         ###   ########.fr       */
+/*   Created: 2024/11/06 10:28:12 by vlopatin          #+#    #+#             */
+/*   Updated: 2024/11/12 19:07:09 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	calc_find_current_position(int current, int *stack_a)
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	int	i;
+	int		i;
+	char	*dst;
+	int		str_len;
 
+	if (!s)
+		return (NULL);
+	str_len = ft_strlen(s);
+	dst = (char *)malloc(1 + str_len * sizeof(char));
+	if (!dst)
+		return (NULL);
 	i = 0;
-	while (stack_a[i] != -1)
+	while (s[i])
 	{
-		if (stack_a[i] == current)
-			return (i);
+		dst[i] = f(i, s[i]);
 		i++;
 	}
-	return (-1);
-}
-
-int	ft_min(int a, int b)
-{
-	if (a > b)
-		return (b);
-	return (a);
-}
-
-int	ft_abs(int a)
-{
-	if (a < 0)
-		return (-a);
-	else
-		return (a);
+	dst[i] = '\0';
+	return (dst);
 }

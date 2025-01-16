@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 12:36:48 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 10:33:18 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 12:14:13 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ int	arr_len(char *arr)
 	return (count);
 }
 
-int *extract_single(char *arr)
+int	*extract_single(char *arr)
 {
 	int	i;
 	int	j;
 	int	nb;
 	int	*nb_arr;
-	int error;
+	int	error;
 
 	i = 0;
 	j = 0;
@@ -48,7 +48,7 @@ int *extract_single(char *arr)
 		return (NULL);
 	while (arr[i])
 	{
-		nb = ft_atoi(arr, &i, &error);
+		nb = ft_atoi_error(arr, &i, &error);
 		if (error)
 			return (NULL);
 		nb_arr[j] = nb;
@@ -64,7 +64,7 @@ int	validate_input_single(char *str)
 	int	i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		while (is_space(str[i]))
 			i++;

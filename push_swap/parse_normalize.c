@@ -6,13 +6,13 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:27:39 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 21:42:35 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 12:15:27 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-static void	*ft_calloc(size_t nmemb, size_t size)
+static void	*ft_calloc_minus_one(size_t nmemb, size_t size)
 {
 	int		*ptr;
 	size_t	result;
@@ -63,11 +63,11 @@ int	*normalize_sequence(int *src, int len)
 	int	pos;
 	int	*dst;
 
-	dst = ft_calloc(len, sizeof(int));
+	dst = ft_calloc_minus_one(len, sizeof(int));
 	if (!dst)
 		return (NULL);
 	i = 0;
-	while(i < len)
+	while (i < len)
 	{
 		pos = find_lowest_pos(dst, src, len);
 		dst[pos] = i;

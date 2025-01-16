@@ -6,13 +6,13 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:24:37 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 10:33:46 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 12:14:32 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-static void reverse_array(int *arr)
+static void	reverse_array(int *arr)
 {
 	int	i;
 	int	len;
@@ -30,10 +30,13 @@ static void reverse_array(int *arr)
 		i++;
 	}
 }
+
 static int	*parsing_single(char *av, int *len)
 {
 	int	*nb_arr;
 
+	if (!av[0])
+		return (NULL);
 	if (!validate_input_single(av))
 		return (NULL);
 	nb_arr = extract_single(av);

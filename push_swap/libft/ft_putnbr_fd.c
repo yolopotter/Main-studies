@@ -1,42 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   calculation_utils.c                                :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 14:33:09 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 12:13:35 by vlopatin         ###   ########.fr       */
+/*   Created: 2024/11/06 15:55:23 by vlopatin          #+#    #+#             */
+/*   Updated: 2024/11/12 19:06:45 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	calc_find_current_position(int current, int *stack_a)
+static	void	ft_putchar(int a, int fd)
 {
-	int	i;
+	char	c;
 
-	i = 0;
-	while (stack_a[i] != -1)
+	c = '0' + a;
+	ft_putchar_fd(c, fd);
+}
+
+static	void	ft_recursion(int nb, int fd)
+{
+	if (nb >= 10)
+		ft_recursion(nb / 10, fd);
+	ft_putchar(nb % 10, fd);
+}
+
+void	ft_putnbr_fd(int n, int fd)
+{
+	if (n == -2147483648)
 	{
-		if (stack_a[i] == current)
-			return (i);
-		i++;
+		write(fd, "-2147483648", 11);
+		return ;
 	}
-	return (-1);
-}
-
-int	ft_min(int a, int b)
-{
-	if (a > b)
-		return (b);
-	return (a);
-}
-
-int	ft_abs(int a)
-{
-	if (a < 0)
-		return (-a);
-	else
-		return (a);
+	if (n < 0)
+	{
+		ft_putchar_fd('-', fd);
+		n = -n;
+	}
+	ft_recursion(n, fd);
 }

@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 15:54:16 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 21:53:44 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 12:10:44 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	validate_input_multiple(char **av)
 {
 	int	i;
+
 	i = 1;
 	while (av[i])
 	{
@@ -40,7 +41,7 @@ int	*extract_multiple(int ac, char **av)
 	while (av[i])
 	{
 		index = 0;
-		nb_arr[i - 1] = ft_atoi(av[i], &index, &error);
+		nb_arr[i - 1] = ft_atoi_error(av[i], &index, &error);
 		if (error)
 			return (NULL);
 		i++;

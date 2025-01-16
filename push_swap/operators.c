@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:49:02 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 21:19:47 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 12:15:18 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	apply_swap(int *src)
 {
-	int temp;
-	int len;
+	int	temp;
+	int	len;
 
 	len = stack_len(src);
 	if (!src || len == 0)
@@ -58,7 +58,7 @@ int	apply_reverse_rotation(int *stack)
 		return (1);
 	temp = stack[0];
 	i = 0;
-	while(i < len - 1)
+	while (i < len - 1)
 	{
 		stack[i] = stack[i + 1];
 		i++;
@@ -78,7 +78,7 @@ int	apply_rotation(int *stack)
 	if (!stack)
 		return (1);
 	temp = stack[len - 1];
-	while(len > 0)
+	while (len > 0)
 	{
 		stack[len - 1] = stack[len - 2];
 		len--;

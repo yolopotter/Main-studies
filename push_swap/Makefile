@@ -1,10 +1,10 @@
-# Compiler
+NAME = push_swap
 CC = cc
-
-# Compiler flags
 CFLAGS = -Wall -Wextra -Werror
+LIBFTDIR = ./libft
+LIBFT = $(LIBFTDIR)/libft.a
+INCLUDES = -I$(LIBFTDIR)
 
-# Source files
 SRCS = \
 		algo_main.c \
 		parse_multiple.c \
@@ -20,29 +20,26 @@ SRCS = \
 		algo_big.c \
 		calculation_utils.c
 
-# Header files
-HDRS = $(wildcard *.h)
-
-# Object files
 OBJS = $(SRCS:.c=.o)
 
-# Output executable
-NAME = push_swap
+all: $(LIBFT) $(NAME) clean
 
-# Rules
-all: $(NAME) clean
+$(LIBFT):
+	$(MAKE) -C $(LIBFTDIR)
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT)
 
-%.o: %.c $(HDRS)
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -f $(OBJS)
+	$(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
 	rm -f $(NAME)
+	$(MAKE) -C $(LIBFTDIR) fclean
 
 re: fclean all
 

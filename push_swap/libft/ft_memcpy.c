@@ -1,42 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   calculation_utils.c                                :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 14:33:09 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 12:13:35 by vlopatin         ###   ########.fr       */
+/*   Created: 2024/10/30 11:16:33 by vlopatin          #+#    #+#             */
+/*   Updated: 2024/11/12 19:06:26 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	calc_find_current_position(int current, int *stack_a)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	int	i;
+	size_t				i;
+	unsigned char		*dst_temp;
+	const unsigned char	*src_temp;
 
+	if (!dest && !src)
+		return (0);
 	i = 0;
-	while (stack_a[i] != -1)
+	dst_temp = (unsigned char *)dest;
+	src_temp = (const unsigned char *)src;
+	while (i < n)
 	{
-		if (stack_a[i] == current)
-			return (i);
+		dst_temp[i] = src_temp[i];
 		i++;
 	}
-	return (-1);
-}
-
-int	ft_min(int a, int b)
-{
-	if (a > b)
-		return (b);
-	return (a);
-}
-
-int	ft_abs(int a)
-{
-	if (a < 0)
-		return (-a);
-	else
-		return (a);
+	return (dest);
 }

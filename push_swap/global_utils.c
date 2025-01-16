@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:51:54 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/15 22:17:03 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 12:15:00 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	stack_len(int *stack)
 	int	len;
 
 	len = 0;
-	while(stack[len] != -1)
+	while (stack[len] != -1)
 		len++;
 	return (len);
 }
@@ -79,14 +79,14 @@ int	find_gap(int nb, int *stack)
 	i = 0;
 	max = find_max(stack);
 	min = find_min(stack);
-	while(stack[i] != -1)
+	while (stack[i] != -1)
 	{
 		if (nb > max || nb < min)
 		{
 			i = 0;
 			while (stack[i] != -1)
 			{
-				if(stack[i] == max)
+				if (stack[i] == max)
 					return (i);
 				i++;
 			}
