@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:51:35 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 16:48:07 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 20:44:51 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,12 @@
 # include <limits.h>
 # include "./libft/libft.h"
 
-typedef struct s_calc
-{
+typedef enum e_direction {
+	A_TO_B,
+	B_TO_A
+}	t_direction;
+
+typedef struct s_calc {
 	int	price;
 	int	cheapest;
 	int	cheapest_number;
@@ -64,13 +68,14 @@ int		stack_len(int *stack);
 int		find_max(int *stack);
 int		find_min(int *stack);
 int		is_sorted(int *stack);
-int		find_gap(int nb, int *stack);
+int		find_gap(int nb, int *stack, t_direction dir);
+
 
 //calc
 int		calc_rotation_or_reverse(int pos, int *stack);
 int		calc_find_smallest_current(int c_max, int *i, int *stack_a);
 int		calc_price(int ra, int rb);
-int		calc_find_cheapest_nb(int c_max, int *stack_a, int *stack_b);
+int	calc_find_cheapest_nb(int c_max, int *src_stack, int *dst_stack, t_direction dir);
 
 //calc utils
 int		calc_find_current_position(int current, int *stack_a);
@@ -84,8 +89,6 @@ int		size_small_algorithm(int *stack_a, int *stack_b);
 int		size_big_algorithm(int amount, int *stack_a, int *stack_b);
 
 
-int	find_gap_descending(int nb, int *stack);
-int	calc_find_cheapest_nb_in_B(int c_max, int *stack_b, int *stack_a);
-void	move_all_to_other_original(int *stack_a, int *stack_b);
+int	calc_find_cheapest_nb_in_B(int c_max, int *src_stack, int *dst_stack, t_direction dir);
 
 #endif

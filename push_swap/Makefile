@@ -16,6 +16,7 @@ SRCS = \
 		rotation.c \
 		operators.c \
 		global_utils.c \
+		global_utils2.c \
 		calculation.c \
 		algo_small.c \
 		algo_big.c \

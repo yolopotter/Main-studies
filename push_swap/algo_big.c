@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 15:09:55 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 17:05:12 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 20:40:03 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,10 @@ void	move_all_to_other(int amount, int *stack_b, int *stack_a) // merge this som
 	j = 0;
 	while (j < amount)
 	{
-		calc.current_nb = calc_find_cheapest_nb_in_B(amount - 1, stack_b, stack_a);
+		calc.current_nb = calc_find_cheapest_nb(amount - 1, stack_b, stack_a, B_TO_A);
 		calc.position = calc_find_current_position(calc.current_nb, stack_b);
 		calc.rb = calc_rotation_or_reverse(calc.position, stack_b);
-		calc.position = find_gap_descending(calc.current_nb, stack_a);
+		calc.position = find_gap(calc.current_nb, stack_a, B_TO_A);
 		calc.ra = calc_rotation_or_reverse(calc.position, stack_a);
 		rotate(calc.ra, calc.rb, stack_a, stack_b);
 		apply_push(stack_a, stack_b);
@@ -66,10 +66,10 @@ int	size_big_algorithm(int amount, int *stack_a, int *stack_b)
 	j = 0;
 	while (j < amount - 3)
 	{
-		calc.current_nb = calc_find_cheapest_nb(amount - 4, stack_a, stack_b);
+		calc.current_nb = calc_find_cheapest_nb(amount - 4, stack_a, stack_b, A_TO_B);
 		calc.position = calc_find_current_position(calc.current_nb, stack_a);
 		calc.ra = calc_rotation_or_reverse(calc.position, stack_a);
-		calc.position = find_gap(calc.current_nb, stack_b);
+		calc.position = find_gap(calc.current_nb, stack_b, A_TO_B);
 		calc.rb = calc_rotation_or_reverse(calc.position, stack_b);
 		rotate(calc.ra, calc.rb, stack_a, stack_b);
 		apply_push(stack_b, stack_a);

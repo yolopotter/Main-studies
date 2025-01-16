@@ -6,13 +6,13 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 15:04:39 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 16:43:38 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 20:40:19 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	move_all_to_other_original(int *stack_a, int *stack_b)
+static void	move_all_b_to_a(int *stack_a, int *stack_b)
 {
 	int	len;
 	int	min;
@@ -88,13 +88,13 @@ int	size_small_algorithm(int *stack_a, int *stack_b)
 		min = find_min(stack_a);
 		position = calc_find_current_position(min, stack_a);
 		ra = calc_rotation_or_reverse(position, stack_a);
-		position = find_gap(min, stack_b);
+		position = find_gap(min, stack_b, A_TO_B);
 		rb = calc_rotation_or_reverse(position, stack_b);
 		rotate(ra, rb, stack_a, stack_b);
 		apply_push(stack_b, stack_a);
 		ft_putstr_fd("pb\n", 1);
 	}
 	size_mini_algorithm(stack_len(stack_a), stack_a);
-	move_all_to_other_original(stack_a, stack_b);
+	move_all_b_to_a(stack_a, stack_b);
 	return (1);
 }

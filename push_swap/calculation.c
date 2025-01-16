@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:56:27 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 15:51:24 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 20:40:29 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,62 +62,38 @@ int	calc_price(int ra, int rb)
 	return (price);
 }
 
-static void	calc_ra_rb(t_calc *calc, int *stack_a, int *stack_b)
+static void	calc_ra_rb(t_calc *calc, int *src_stack, int *dst_stack, t_direction dir)
 {
 	int	position;
 
-	position = calc_find_current_position(calc->current_nb, stack_a);
-	calc->ra = calc_rotation_or_reverse(position, stack_a);
-	position = find_gap(calc->current_nb, stack_b);
-	calc->rb = calc_rotation_or_reverse(position, stack_b);
-}
-
-int	calc_find_cheapest_nb(int c_max, int *stack_a, int *stack_b)
-{
-	int		i;
-	t_calc	calc;
-
-	i = 0;
-	calc.cheapest = 1000000;
-	while (stack_a[i] != -1)
+	position = calc_find_current_position(calc->current_nb, src_stack);
+	if (dir == A_TO_B)
 	{
-		calc.current_nb = calc_find_smallest_current(c_max, &i, stack_a);
-		if (calc.current_nb == -1)
-			break ;
-		calc_ra_rb(&calc, stack_a, stack_b);
-		calc.price = calc_price(calc.ra, calc.rb);
-		if (calc.price < calc.cheapest)
-		{
-			calc.cheapest_number = calc.current_nb;
-			calc.cheapest = calc.price;
-		}
+		calc->ra = calc_rotation_or_reverse(position, src_stack);
+		position = find_gap(calc->current_nb, dst_stack, A_TO_B);
+		calc->rb = calc_rotation_or_reverse(position, dst_stack);
 	}
-	return (calc.cheapest_number);
+	else
+	{
+		calc->rb = calc_rotation_or_reverse(position, src_stack);
+		position = find_gap(calc->current_nb, dst_stack, B_TO_A);
+		calc->ra = calc_rotation_or_reverse(position, dst_stack);
+	}
 }
 
-static void	calc_ra_rb_for_B(t_calc *calc, int *stack_b, int *stack_a)
-{
-	int	position;
-
-	position = calc_find_current_position(calc->current_nb, stack_b);
-	calc->rb = calc_rotation_or_reverse(position, stack_b);
-	position = find_gap_descending(calc->current_nb, stack_a);
-	calc->ra = calc_rotation_or_reverse(position, stack_a);
-}
-
-int	calc_find_cheapest_nb_in_B(int c_max, int *stack_b, int *stack_a)
+int	calc_find_cheapest_nb(int c_max, int *src_stack, int *dst_stack, t_direction dir)
 {
 	int		i;
 	t_calc	calc;
 
 	i = 0;
 	calc.cheapest = 1000000;
-	while (stack_b[i] != -1)
+	while (src_stack[i] != -1)
 	{
-		calc.current_nb = calc_find_smallest_current(c_max, &i, stack_b);
+		calc.current_nb = calc_find_smallest_current(c_max, &i, src_stack);
 		if (calc.current_nb == -1)
 			break ;
-		calc_ra_rb_for_B(&calc, stack_b, stack_a);
+		calc_ra_rb(&calc, src_stack, dst_stack, dir);
 		calc.price = calc_price(calc.ra, calc.rb);
 		if (calc.price < calc.cheapest)
 		{

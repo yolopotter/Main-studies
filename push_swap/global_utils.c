@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:51:54 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/16 15:40:05 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/16 21:07:40 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,60 +68,4 @@ int	is_sorted(int *stack)
 		i++;
 	}
 	return (1);
-}
-
-int	find_gap(int nb, int *stack)
-{
-	int	i;
-	int	max;
-	int	min;
-
-	i = 0;
-	max = find_max(stack);
-	min = find_min(stack);
-	while (stack[i] != -1)
-	{
-		if (nb > max || nb < min)
-		{
-			i = 0;
-			while (stack[i] != -1)
-			{
-				if (stack[i] == max)
-					return (i);
-				i++;
-			}
-		}
-		if (nb > stack[i] && nb < stack[i + 1])
-			return (i);
-		i++;
-	}
-	return (i);
-}
-
-int	find_gap_descending(int nb, int *stack)
-{
-	int	i;
-	int	max;
-	int	min;
-
-	i = 0;
-	max = find_max(stack);
-	min = find_min(stack);
-	while (stack[i] != -1)
-	{
-		if (nb > max || nb < min)
-		{
-			i = 0;
-			while (stack[i] != -1)
-			{
-				if (stack[i] == min)
-					return (i);
-				i++;
-			}
-		}
-		if (nb < stack[i] && nb > stack[i + 1])
-			return (i);
-		i++;
-	}
-	return (i);
 }
