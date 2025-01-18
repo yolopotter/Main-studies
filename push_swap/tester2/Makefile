@@ -18,7 +18,7 @@ SRCS = \
 		global_utils.c \
 		global_utils2.c \
 		calculation.c \
-		algo_mini.c \
+		algo_small.c \
 		algo_big.c \
 		calculation_utils.c \
 		exit.c
