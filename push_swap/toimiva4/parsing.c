@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:24:37 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/18 11:43:40 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:25:01 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	*parsing(int ac, char **av)
 
 	if (ac == 2)
 		nb_arr = parsing_single(av[1], &len);
-	else if (ac > 2)
+	else
 		nb_arr = parsing_multiple(ac, av, &len);
 	nb_arr = normalize_sequence(nb_arr, len);
 	reverse_array(nb_arr);
