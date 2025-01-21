@@ -9,7 +9,8 @@
 		"functional": "c",
 		"limits.h": "c",
 		"libft.h": "c",
-		"algorithm": "c"
+		"algorithm": "c",
+		"format": "c"
 	},
 	"cmake.sourceDirectory": "/home/vallu/Coding/Main-studies/fdf/lib/MLX42"
 }
