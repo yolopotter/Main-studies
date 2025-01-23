@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:37:23 by mwallage          #+#    #+#             */
-/*   Updated: 2025/01/21 18:59:00 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/23 14:17:29 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,33 +28,6 @@ static int	parse_color(int fd, t_map *map, char *tabj)
 	ft_striteri(tabj, &make_upper);
 	return ((ft_atoi_base(tabj, "0123456789ABCDEF") << 8) | 0xFF);
 }
-
-#include <stdio.h>
-
-void display_parsed_map(t_map *map)
-{
-    int i, j;
-    t_point3d *point;
-
-    printf("Parsed Map (3D Grid):\n");
-    printf("Rows: %d, Columns: %d\n", map->rows, map->cols);
-    printf("Height Range: Low = %.2d, High = %.2d\n", map->low, map->high);
-    printf("=========================================\n");
-
-    for (i = 0; i < map->rows; i++)
-    {
-        for (j = 0; j < map->cols; j++)
-        {
-            point = &(map->grid3d[i][j]);
-            printf("Point[%d][%d]: x=%.2f, y=%.2f, z=%.2f, color=0x%x\n",
-                   i, j, point->x, point->y, point->z, point->mapcolor);
-        }
-        printf("\n");
-    }
-	printf("angles 1: %f, 2: %f, 3: %f\n", map->xrotate, map->yrotate, map->zrotate);
-    printf("=========================================\n");
-}
-
 
 static void	parse_column(int fd, t_map *map, char **tab, int i)
 {

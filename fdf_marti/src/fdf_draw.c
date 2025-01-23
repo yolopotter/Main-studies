@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:38:25 by mwallage          #+#    #+#             */
-/*   Updated: 2025/01/21 19:06:21 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:23:02 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,15 @@ void	project(t_map *map, int i, int j)
 	temp.x = previous->x;
 	temp.y = previous->y;
 	temp.z = previous->z * map->zscale;
-	rotate_z(&temp.x, &temp.y, map->zrotate);
-	rotate_x(&temp.y, &temp.z, map->xrotate);
-	rotate_y(&temp.x, &temp.z, map->yrotate);
-	new->x = (int)((temp.x * map->zoom - temp.y * map->zoom)
-			* cos(map->alpha) + map->x_offset);
-	new->y = (int)(-temp.z * map->zoom
-			+ (temp.x * map->zoom + temp.y * map->zoom)
-			* sin(map->beta) + map->y_offset);
+	// printf("rotations z, x, y: %f, %f, %f\n", map->zrotate, map->xrotate, map->yrotate);
+	// rotate_z(&temp.x, &temp.y, map->zrotate);
+	// rotate_x(&temp.y, &temp.z, map->xrotate);
+	// rotate_y(&temp.x, &temp.z, map->yrotate);
+	// new->x = (int)((temp.x * map->zoom - temp.y * map->zoom) * cos(map->alpha) + map->x_offset);
+	// new->y = (int)(-temp.z * map->zoom + (temp.x * map->zoom + temp.y * map->zoom)* sin(map->beta) + map->y_offset);
+
+	new->x = (int)((temp.x - temp.y) * cos(map->alpha));
+	new->y = (int)(-temp.z + (temp.x + temp.y) * sin(map->beta));
 	if (map->use_zcolor)
 		new->rgba = previous->zcolor;
 	else
@@ -99,7 +100,7 @@ void	draw_image(void *param)
 		while (++j < fdf->map->cols)
 			draw_line(fdf, j, i);
 	}
-	display_parsed_map(fdf->map);
+	display_2d_map(fdf->map); //mun
 }
 
 void	display_menu(mlx_t *mlx)

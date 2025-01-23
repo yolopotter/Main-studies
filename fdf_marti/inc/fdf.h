@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:30:52 by mwallage          #+#    #+#             */
-/*   Updated: 2025/01/21 18:56:08 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/23 14:47:40 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 # include "../lib/libft/inc/libft.h"
 
-# define WIDTH				1920
-# define HEIGHT				1080
+# define WIDTH				1500
+# define HEIGHT				1000
 # define TEXT_COLOR			0xEAEAEAFF
 # define BACKGROUND			0x22222200
 # define MENU_BACKGROUND	0x1E1E1EFF
@@ -118,6 +118,7 @@ int			valid_filename(const char *filename);
 int			get_color(t_point2d current, t_point2d a, t_point2d b);
 void		set_zcolor(t_map *map);
 
-void display_parsed_map(t_map *map);
+void display_2d_map(t_map *map);
+void display_3d_map(t_map *map);
 
 #endif
