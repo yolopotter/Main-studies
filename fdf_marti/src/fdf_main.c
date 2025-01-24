@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:31:03 by mwallage          #+#    #+#             */
-/*   Updated: 2025/01/23 15:20:50 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:59:54 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ static t_map	*parse_input(char *filename)
 	get_dimensions(fd, map);
 	close(fd);
 	malloc_grid(map);
-	// map->interval = ft_min(WIDTH / map->cols, HEIGHT / map->rows) / 2;
-	// map->interval = ft_max(2, map->interval);
-	map->interval = 50;
+	map->interval = ft_min(WIDTH / map->cols, HEIGHT / map->rows) / 2;
+	map->interval = ft_max(2, map->interval);
+	// map->interval = 50;
 	fd = open(filename, O_RDONLY, 0777);
 	parse_map(fd, map);
 	// display_parsed_map(map); //added
@@ -131,7 +131,7 @@ int32_t	main(int ac, char **av)
 	mlx_loop_hook(fdf->mlx, &ft_hook, fdf);
 	// mlx_loop_hook(fdf->mlx, &ft_hook_rotate, fdf);
 	// mlx_loop_hook(fdf->mlx, &ft_hook_project, fdf);
-	// mlx_scroll_hook(fdf->mlx, &fdf_scrollhook, fdf);
+	mlx_scroll_hook(fdf->mlx, &fdf_scrollhook, fdf);
 	mlx_loop_hook(fdf->mlx, &draw_image, fdf);
 	mlx_loop(fdf->mlx);
 	mlx_terminate(fdf->mlx);
