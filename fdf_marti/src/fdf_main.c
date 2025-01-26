@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:31:03 by mwallage          #+#    #+#             */
-/*   Updated: 2025/01/24 13:59:54 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/26 18:29:37 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ static t_fdf	*init_fdf(char *filename)
 	static t_fdf	fdf;
 
 	fdf.map = parse_input(filename);
-	fdf.mlx = mlx_init(WIDTH, HEIGHT, "FdF", true);
+	fdf.mlx = mlx_init(WIDTH, HEIGHT, "lol", true);
 	if (!fdf.mlx)
 	{
 		free_map(fdf.map);
