@@ -3,21 +3,21 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mwallage <mwallage@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/10 15:31:16 by mwallage          #+#    #+#              #
-#    Updated: 2023/09/30 15:24:35 by mwallage         ###   ########.fr        #
+#    Updated: 2025/01/27 15:50:45 by vlopatin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC		:= cc
-CFLAGS	:= -Wall -Wextra -Werror -Wunreachable-code -Ofast
+CC			:= cc
+CFLAGS		:= -Wall -Wextra -Werror -Wunreachable-code -Ofast
 MLX_DIR		:= ./lib/MLX42
-MLX		:= $(MLX_DIR)/build/libmlx42.a
+MLX			:= $(MLX_DIR)/build/libmlx42.a
 LIBFT_DIR	:= ./lib/libft
-LIBFT 	:= $(LIBFT_DIR)/libft.a
-HEADERS	:= -I ./inc -I $(MLX_DIR)/include/MLX42 -I $(LIBFT_DIR)/inc
-UNAME_S	:= $(shell uname -s)
+LIBFT 		:= $(LIBFT_DIR)/libft.a
+HEADERS		:= -I ./inc -I $(MLX_DIR)/include/MLX42 -I $(LIBFT_DIR)/inc
+UNAME_S		:= $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 	LIBS	:= -L$(LIBFT_DIR) -lft $(MLX_DIR)/build/libmlx42.a -ldl -lglfw -pthread -lm
 endif

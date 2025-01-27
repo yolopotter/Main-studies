@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:38:25 by mwallage          #+#    #+#             */
-/*   Updated: 2025/01/24 12:26:12 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:24:41 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ void	draw_image(void *param)
 		while (++j < fdf->map->cols)
 			draw_line(fdf, j, i);
 	}
-	display_2d_map(fdf->map); //mun
 }
 
 void	display_menu(mlx_t *mlx)

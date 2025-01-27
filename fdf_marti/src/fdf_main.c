@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:31:03 by mwallage          #+#    #+#             */
-/*   Updated: 2025/01/26 18:29:37 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:38:59 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,8 @@ int32_t	main(int ac, char **av)
 	// display_3d_map(fdf->map); //mun
 	// display_2d_map(fdf->map); //mun
 	mlx_loop_hook(fdf->mlx, &ft_hook, fdf);
-	// mlx_loop_hook(fdf->mlx, &ft_hook_rotate, fdf);
-	// mlx_loop_hook(fdf->mlx, &ft_hook_project, fdf);
+	mlx_loop_hook(fdf->mlx, &ft_hook_rotate, fdf);
+	mlx_loop_hook(fdf->mlx, &ft_hook_project, fdf);
 	mlx_scroll_hook(fdf->mlx, &fdf_scrollhook, fdf);
 	mlx_loop_hook(fdf->mlx, &draw_image, fdf);
 	mlx_loop(fdf->mlx);
