@@ -6,6 +6,7 @@ Including in other project can be done by creating gnl directory and then copyin
 
 Example of including GNL in some projects makefile:
 
+```
 GNL_DIR		= ./src/gnl
 
 HEADERS		= -I $(GNL_DIR)
@@ -13,7 +14,7 @@ HEADERS		= -I $(GNL_DIR)
 SRC			=	....
 				gnl/get_next_line_utils.c gnl/get_next_line.c
 
-```
+
 $(NAME): $(OBJS)
 	@$(CC) $(OBJS) $(HEADERS) -o $(NAME)
 ```

@@ -7,7 +7,7 @@ library is located in libft/libft/libft.a
 
 Example of including LIBFT in some projects makefile:
 
-
+```
 LIBFT_DIR 	= ./libft
 LIBFT 		= $(LIBFT_DIR)/libft.a
 
@@ -24,3 +24,4 @@ clean:
 
 fclean: clean
 	$(MAKE) -C $(LIBFT_DIR) fclean
+```
