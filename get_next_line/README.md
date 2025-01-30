@@ -13,5 +13,8 @@ HEADERS		= -I $(GNL_DIR)
 SRC			=	....
 				gnl/get_next_line_utils.c gnl/get_next_line.c
 
+```
 $(NAME): $(OBJS)
 	@$(CC) $(OBJS) $(HEADERS) -o $(NAME)
+```
+
