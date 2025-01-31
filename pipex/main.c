@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 15:28:35 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/31 12:16:43 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/01/31 13:22:05 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ int	main(int ac, char **av)
         perror("pipe");
         return 1;
     }
-	printf("first time: pipe fd[0]: %i\n", pipe_fd[0]);
-	printf("first time: pipe fd[1]: %i\n", pipe_fd[1]);
 
     pid_t pid = fork();
     if (pid == -1) {
@@ -43,16 +41,19 @@ int	main(int ac, char **av)
 	if (pid == 0)
 	{
         // Child process: Executes `wc -l`
-		printf("pipe fd[1] %i\n", pipe_fd[1]);
-		printf("pipe fd[0] %i\n", pipe_fd[0]);
+        // Close the write end of the pipe in the child process
         close(pipe_fd[1]);
-        dup2(pipe_fd[0], STDIN_FILENO); // Replace stdin with pipe
-        close(pipe_fd[0]);
 
-        char *cmd = "/usr/bin/wc";
-        char *args[] = {"wc", "-l", NULL};
-        execve(cmd, args, NULL);
-        perror("execve");
+        // Redirect stdin to read from the pipe
+        dup2(pipe_fd[0], STDIN_FILENO);
+
+        // Now read from STDIN_FILENO (which is connected to the pipe) and write to STDOUT_FILENO
+        char buffer[1024];
+        ssize_t bytes_read;
+        while ((bytes_read = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
+            write(STDOUT_FILENO, buffer, bytes_read);
+        }
+        close(pipe_fd[0]);
         return 1;
 	}
 	else
@@ -94,5 +95,40 @@ if (pid == 0)
 
     // Exit the child process
     exit(0);
+}
+
+if (pid == 0)
+{
+    // Child process: Executes `wc -l`
+    printf("pipe fd[1] %i\n", pipe_fd[1]);
+    printf("pipe fd[0] %i\n", pipe_fd[0]);
+    close(pipe_fd[1]);
+    dup2(pipe_fd[0], STDIN_FILENO); // Replace stdin with pipe
+    close(pipe_fd[0]);
+
+    char *cmd = "/usr/bin/wc";
+    char *args[] = {"wc", "-l", NULL};
+    execve(cmd, args, NULL);
+    perror("execve");
+    return 1;
+}
+
+if (pid == 0)
+{
+    // Child process: Executes `wc -l`
+    // Close the write end of the pipe in the child process
+    close(pipe_fd[1]);
+
+    // Redirect stdin to read from the pipe
+    dup2(pipe_fd[0], STDIN_FILENO);
+
+    // Now read from STDIN_FILENO (which is connected to the pipe) and write to STDOUT_FILENO
+    char buffer[1024];
+    ssize_t bytes_read;
+    while ((bytes_read = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
+        write(STDOUT_FILENO, buffer, bytes_read);
+    }
+    close(pipe_fd[0]);
+    return 1;
 }
 
