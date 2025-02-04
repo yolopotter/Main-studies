@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 15:10:38 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/01/28 11:10:18 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/04 11:07:43 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int32_t	ft_atoi_base(char *str, int base);
 char	*ft_itoa(int n);
 
 void	*ft_calloc(size_t nmemb, size_t size);
+void	ft_free_split(char **tab);
 
 // math
 int		ft_mini(int a, int b);

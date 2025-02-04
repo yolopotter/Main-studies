@@ -11,7 +11,8 @@ SRC_DIR		= src/
 
 HEADERS		= -I ./inc -I $(LIBFT_DIR)/inc
 
-SRC			=	test.c
+SRC			=	test.c \
+				utils.c
 
 OBJS		= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
