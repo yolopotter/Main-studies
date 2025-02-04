@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:49:12 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/04 12:02:40 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/04 15:29:24 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdlib.h> //NULL
 # include <unistd.h> //execve, fork
 # include <fcntl.h> //pid_t
-# include <stdio.h> //printf
+# include <stdio.h> //perror
 # include <sys/wait.h> //wait
 
 # define AC "Usage: ./pipex file1 cmd1 cmd2 file2"
@@ -27,8 +27,9 @@
 # define OPEN "Open"
 # define EXECVE "Execve"
 
+void	fork_fail(int *pipe_fd);
+void	close_fds(int *fd, int amount);
 void	exit_error(int error, char **arr1, char *arr2, const char *msg);
-char	**parse_cmd(char *av);
 char	*find_path(char **cmd, char **envp);
 
 #endif

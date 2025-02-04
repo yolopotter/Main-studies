@@ -1,6 +1,6 @@
 NAME		= pipex
 CC			= cc
-CFLAGS		= -g #-Wextra -Wall -Werror
+CFLAGS		= -Wextra -Wall -Werror
 
 LIBFT_DIR 	= ./libft
 LIBFT 		= $(LIBFT_DIR)/libft.a
@@ -11,7 +11,7 @@ SRC_DIR		= src/
 
 HEADERS		= -I ./inc -I $(LIBFT_DIR)/inc
 
-SRC			=	test.c \
+SRC			=	pipex.c \
 				utils.c
 
 OBJS		= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))

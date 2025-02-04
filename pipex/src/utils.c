@@ -6,11 +6,31 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:00 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/04 12:04:49 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/04 15:29:11 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/pipex.h"
+
+void	fork_fail(int *pipe_fd)
+{
+	close_fds(pipe_fd, 2);
+	exit_error(2, NULL, NULL, FORK);
+}
+
+void	close_fds(int *fd, int amount)
+{
+	int	i;
+
+	i = 0;
+	while (i < amount)
+	{
+		if (fd[i] != -1)
+			close (fd[i]);
+		fd[i] = -1;
+		i++;
+	}
+}
 
 void	exit_error(int error, char **arr1, char *arr2, const char *msg)
 {
@@ -25,14 +45,6 @@ void	exit_error(int error, char **arr1, char *arr2, const char *msg)
 		perror((char *)msg);
 	}
 	exit(1);
-}
-
-char	**parse_cmd(char *av)
-{
-	char	**cmd;
-
-	cmd = ft_split(av, ' ');
-	return (cmd);
 }
 
 int	find_line(char **envp)
@@ -53,22 +65,27 @@ char	*find_path(char **cmd, char **envp)
 {
 	int		i;
 	char	**paths;
-	char	*tmp;
 	char	*exec;
+	char	*current_path;
 
 	i = find_line(envp);
 	paths = ft_split(envp[i] + 5, ':');
 	i = 0;
 	while (paths[i])
 	{
-		paths[i] = ft_strjoin(paths[i], "/");
-		exec = ft_strjoin(paths[i], cmd[0]);
+		current_path = ft_strjoin(paths[i], "/");
+		exec = ft_strjoin(current_path, cmd[0]);
+		free (current_path);
 		if (access(exec, F_OK | X_OK) == 0)
+		{
+			ft_free_split(paths);
 			return (exec);
+		}
 		free(exec);
 		exec = NULL;
 		i++;
 	}
+	ft_free_split(paths);
 	exit_error(3, cmd, NULL, PATH);
-	return (paths[i]);
+	return (NULL);
 }
