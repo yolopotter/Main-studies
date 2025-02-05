@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:00 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/04 15:29:11 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/05 16:06:50 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	close_fds(int *fd, int amount)
 		i++;
 	}
 }
+// exit(42) exists because when ft_split returns NULL, perror would print Success.
 
 void	exit_error(int error, char **arr1, char *arr2, const char *msg)
 {
@@ -38,11 +39,20 @@ void	exit_error(int error, char **arr1, char *arr2, const char *msg)
 		ft_putendl_fd((char *)msg, 2);
 	if (error == 2)
 		perror((char *)msg);
-	if (error == 3)
+	if (error == 3 || error ==4)
 	{
 		ft_free_split(arr1);
 		free(arr2);
 		perror((char *)msg);
+		if (error == 3)
+			exit (127);
+		else if (error == 4)
+			exit (1);
+	}
+	if (error == 5)
+	{
+		ft_free_split(arr1);
+		exit(42);
 	}
 	exit(1);
 }

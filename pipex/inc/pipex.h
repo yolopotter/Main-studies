@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:49:12 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/04 15:29:24 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/05 12:22:43 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 
 # define AC "Usage: ./pipex file1 cmd1 cmd2 file2"
 # define PATH "Command not found in system files"
+# define PATH1 "Command not found in system files: No such file or directory"
 # define FORK "Fork"
 # define PIPE "Pipe"
 # define OPEN "Open"
