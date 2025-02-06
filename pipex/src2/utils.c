@@ -6,47 +6,34 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:00 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/06 16:18:17 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/06 12:43:46 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/pipex.h"
 
-void	pipe_fail(int *fd)
+void	fork_fail(int *pipe_fd)
 {
-	close_fds(NULL, fd, 2);
-	exit_error(2, NULL, NULL, PIPE);
-}
-
-void	fork_fail(int *fd, int *pipe_fd)
-{
-	close_fds(fd, pipe_fd, 2);
+	close_fds(NULL, pipe_fd, 2);
 	exit_error(2, NULL, NULL, FORK);
 }
 
-void	close_fds(int *fd1, int *fd3, int amount)
+void	close_fds(int *fd1, int *fd, int amount)
 {
 	int	i;
 
 	i = 0;
-	while (i < amount && fd3)
+	while (i < amount)
 	{
-		if (fd3[i] != -1)
-			close (fd3[i]);
-		fd3[i] = -1;
+		if (fd[i] != -1)
+			close (fd[i]);
+		fd[i] = -1;
 		i++;
 	}
-	// if (fd1 != -1)
-	// {
-	// 	close(fd1);
-	// 	fd1 = -1;
-	// }
-	while (i < amount && fd1)
+	if (*fd1)
 	{
-		if (fd1[i] != -1)
-			close (fd1[i]);
-		fd1[i] = -1;
-		i++;
+		close(*fd1);
+		*fd1 = -1;
 	}
 }
 // exit(42) exists because when ft_split returns NULL, perror would print Success.
@@ -79,6 +66,8 @@ void	exit_error(int error, char **arr1, char *arr2, const char *msg)
 		ft_putstr_fd((char *)arr2, 2);
 		ft_putstr_fd(": ", 2);
 		perror(NULL);
+		ft_free_split(arr1);
+		exit(43);
 	}
 	if (error == 5) //command is NULL error
 	{
@@ -92,15 +81,7 @@ void	exit_error(int error, char **arr1, char *arr2, const char *msg)
 		ft_free_split(arr1);
 		free(arr2);
 	}
-	if (error == 14) //file opening error
-	{
-		ft_putstr_fd(PIPEX, 2);
-		ft_putstr_fd((char *)arr2, 2);
-		ft_putstr_fd(": ", 2);
-		perror(NULL);
-	}
-	if (error < 10)
-		exit(1);
+	exit(1);
 }
 
 int	find_line(char **envp)
