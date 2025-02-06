@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:10 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/06 16:17:28 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/06 16:20:58 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ int	parent_process(int *fd, int *pipe_fd, int pid1, int pid2)
 	return (WEXITSTATUS(status2));
 }
 
+// move cmd retriaval to parent process
 // check fd closures at different fails
 // split malloc fails
 
