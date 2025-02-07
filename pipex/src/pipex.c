@@ -6,124 +6,160 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:10 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/07 15:09:54 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/07 23:05:10 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/pipex.h"
 
-void	child_process1(int *fd, int *pipe_fd, char **cmd1, char **envp, char *path1)
+void	child_process1(t_pipe_side	*left, t_pipe_side	*right, int *pipe_fd, char **envp)
 {
 	close(pipe_fd[0]);
-	pipe_fd[0] = -1;
-	close(fd[1]);
-	fd[1] = -1;
-	dup2(fd[0], STDIN_FILENO);
+	close(right->fd);
+	dup2(left->fd, STDIN_FILENO);
 	dup2(pipe_fd[1], STDOUT_FILENO);
-	if (execve(path1, cmd1, envp) == -1)
-	{
-		close_fds(fd, pipe_fd, 2);
-		exit_error(6, cmd1, path1, EXECVE);
-	}
+	close(left->fd);
+	close(pipe_fd[1]);
+	if (execve(left->path, left->cmd, envp) == -1)
+		exit_error(6, &(left->cmd), &(left->path), EXECVE);
 }
 
-void	child_process2(int *fd, int *pipe_fd, char **cmd2, char **envp, char *path2)
+void	child_process2(t_pipe_side	*left, t_pipe_side	*right, int *pipe_fd, char **envp)
 {
 	close(pipe_fd[1]);
-	pipe_fd[1] = -1;
-	close(fd[0]);
-	fd[0] = -1;
+	close(left->fd);
 	dup2(pipe_fd[0], STDIN_FILENO);
-	dup2(fd[1], STDOUT_FILENO);
-	if (execve(path2, cmd2, envp) == -1)
-	{
-		close_fds(fd, pipe_fd, 2);
-		exit_error(6, cmd2, path2, EXECVE);
-	}
+	dup2(right->fd, STDOUT_FILENO);
+	close(pipe_fd[0]);
+	close(right->fd);
+	if (execve(right->path, right->cmd, envp) == -1)
+		exit_error(6, &(right->cmd), &(right->path), EXECVE);
 }
 
-void	parent_process(int *fd, int *pipe_fd, int pid1, int pid2)
+void	parent_process(t_pipe_side	*left, t_pipe_side	*right, int *pipe_fd)
 {
 	int	status1;
 	int	status2;
 
-	close_fds(fd, pipe_fd, 2);
-	waitpid(pid1, &status1, 0);
-	waitpid(pid2, &status2, 0);
+	close_fds(-1, pipe_fd, NULL, 2);
+	close_free_left(left);
+	close_free_right(right);
+	waitpid(left->pid, &status1, 0);
+	waitpid(right->pid, &status2, 0);
 }
 
-// move cmd retriaval to parent process
-// check fd closures at different fails
-// split malloc fails
-
-int	init_left_side()
+void	init_all(t_pipe_side	*right, t_pipe_side	*left, int *pipe_fd)
 {
-	
+	pipe_fd[0] = -1;
+	pipe_fd[1] = -1;
+	left->fd = -1;
+	left->cmd = NULL;
+	left->path = NULL;
+	left->pid = -1;
+	right->fd = -1;
+	right->cmd = NULL;
+	right->path = NULL;
+	right->pid = -1;
 }
+
+void	close_free_left(t_pipe_side	*left)
+{
+	close_fds(left->fd, NULL, NULL, 0);
+	left->fd = -1;
+	ft_free_split(left->cmd);
+	left->cmd = NULL;
+	free(left->path);
+	left->path = NULL;
+}
+
+void	close_free_right(t_pipe_side	*right)
+{
+	close_fds(right->fd, NULL, NULL, 0);
+	right->fd = -1;
+	ft_free_split(right->cmd);
+	right->cmd = NULL;
+	free(right->path);
+	right->path = NULL;
+}
+void	init_left_side(t_pipe_side	*left, char **av, char **envp)
+{
+	left->fd = open(av[1], O_RDONLY);
+	if (left->fd == -1)
+	{
+		exit_error(14, NULL, NULL, av[1]);
+		return ;
+	}
+	left->cmd = ft_split(av[2], ' ');
+	if (!left->cmd[0])
+	{
+		close_fds(left->fd, NULL, NULL, 0);
+		exit_error(15, NULL, NULL, NULL);
+		return ;
+	}
+	left->path = find_path(left->cmd, envp);//send original, not copy
+	if (!left->path)
+	{
+		exit_error(13, &(left->cmd), NULL, PATH);
+		close_free_left(left);
+		return ;
+	}
+	left->is_valid = 1;
+}
+
+int	init_right_side(t_pipe_side	*right, t_pipe_side	*left, char **av, char **envp)
+{
+	right->fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (right->fd == -1)
+	{
+		close_free_left(left);
+		exit_error(4, NULL, NULL, av[4]);
+	}
+	right->cmd = ft_split(av[3], ' ');
+	if (!right->cmd[0])
+	{
+		close_free_left(left);
+		close_free_right(right);
+		exit_error(5, NULL, NULL, NULL);
+	}
+	right->path = find_path(right->cmd, envp);
+	if (!right->path)
+	{
+		close_free_left(left);
+		close_fds(right->fd, NULL, NULL, 0);
+		exit_error(3, &(right->cmd), NULL, PATH);
+	}
+	return (1);
+}
+
+// check fd closures at different fails
+//absolute path check
+//split malloc fail
 
 int	main(int ac, char **av, char **envp)
 {
-	pid_t	pid1;
-	pid_t	pid2;
-	int		pipe_fd[2];
-	int		fd[2];
-	// int		exit_status;
-	char	**cmd1, **cmd2;
-	char	*path1, *path2;
+	int			pipe_fd[2];
 	t_pipe_side	left, right;
 
 	if (ac != 5)
 		exit_error(1, NULL, NULL, AC2);
-
-	fd[0] = open(av[1], O_RDONLY);
-	if (fd[0] == -1)
-		exit_error(14, NULL, av[1], OPEN);
-	fd[1] = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if (fd[1] == -1)
-	{
-		close_fds(fd, NULL, 2);
-		exit_error(4, NULL, av[5], OPEN);
-	}
-	cmd1 = ft_split(av[2], ' ');
-	if (!cmd1[0])
-	{
-		close_fds(fd, NULL, 2);
-		ft_free_split(cmd1);
-		cmd1 = NULL;
-		exit_error(15, NULL, NULL, NULL);
-	}
-	// path1 = NULL;
-	if (cmd1)
-		path1 = find_path(cmd1, envp, NON_FATAL);
-	cmd2 = ft_split(av[3], ' ');
-	if (!cmd2[0])
-	{
-		close_fds(fd, NULL, 2);
-		if (path1)
-			ft_free_split(cmd1);
-		cmd1 = NULL;
-		ft_free_split(cmd2);
-		cmd2 = NULL;
-		exit_error(5, NULL, NULL, NULL);
-	}
-	path2 = find_path(cmd2, envp, FATAL);
-	pid1 = -1;
-	pid2 = -1;
-	if (fd[0] != -1 && path1 != NULL)
+	init_all(&left, &right, pipe_fd);
+	init_left_side(&left, av, envp);
+	init_right_side(&right, &left, av, envp);
+	if (left.is_valid)
 	{
 		if (pipe(pipe_fd) == -1)
-			pipe_fail(fd, cmd1, cmd2);
-		pid1 = fork();
-		if (pid1 == -1)
-			fork_fail(fd, pipe_fd, cmd1, cmd2);
-		if (pid1 == 0)
-			child_process1(fd, pipe_fd, cmd1, envp, path1);
-		pid2 = fork();
-		if (pid2 == -1)
-			fork_fail(fd, pipe_fd, cmd1, cmd2);
-		if (pid2 == 0)
-			child_process2(fd, pipe_fd, cmd2, envp, path2);
+			pipe_fail(&left, &right);
+		left.pid = fork();
+		if (left.pid == -1)
+			fork_fail(&left, &right, pipe_fd);
+		if (left.pid == 0)
+			child_process1(&left, &right, pipe_fd, envp);
+		right.pid = fork();
+		if (right.pid == -1)
+			fork_fail(&left, &right, pipe_fd);
+		if (right.pid == 0)
+			child_process2(&left, &right, pipe_fd, envp);
 	}
-	parent_process(fd, pipe_fd, pid1, pid2);
+	parent_process(&left, &right, pipe_fd);
 	return (0);
 }
