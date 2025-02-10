@@ -12,7 +12,11 @@ SRC_DIR		= src/
 HEADERS		= -I ./inc -I $(LIBFT_DIR)/inc
 
 SRC			=	pipex.c \
-				utils.c
+				utils.c \
+				error.c \
+				fail.c \
+				init.c \
+				cleanup.c
 
 OBJS		= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 

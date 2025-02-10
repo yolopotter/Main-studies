@@ -1,16 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 15:26:24 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/10 16:26:32 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/10 15:19:57 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+// #include "libft.h"
+
+# include <stdlib.h>
+# include <unistd.h>
+# include <limits.h>
+# include <stdint.h>
 
 static	int	ft_word_len(char const *s, char c)
 {
@@ -56,12 +61,11 @@ static	void	ft_fill(char *dst1, char const *src, char c)
 	dst1[i] = 0;
 }
 
-static	int	ft_allocate_mem_word(char ***dst, int word_len, int j, int *error)
+static	int	ft_allocate_mem_word(char ***dst, int word_len, int j)
 {
 	(*dst)[j] = (char *)malloc(1 + word_len * sizeof(char));
 	if (!(*dst)[j])
 	{
-		*error = 1;
 		while (j > 0)
 		{
 			j--;
@@ -84,7 +88,7 @@ char	**ft_split(char const *s, char c, int *error)
 		return (NULL);
 	dst = (char **)malloc((ft_count_words(s, c) + 1) * sizeof(char *));
 	if (!dst)
-		return (*error = 1, NULL);
+		return (NULL);
 	i = 0;
 	j = 0;
 	while (s[i])
@@ -93,7 +97,7 @@ char	**ft_split(char const *s, char c, int *error)
 			i++;
 		if (s[i])
 		{
-			if (!ft_allocate_mem_word(&dst, ft_word_len(&s[i], c), j, error))
+			if (!ft_allocate_mem_word(&dst, ft_word_len(&s[i], c), j))
 				return (NULL);
 			ft_fill(dst[j++], &s[i], c);
 			i += ft_word_len(&s[i], c);
@@ -102,3 +106,46 @@ char	**ft_split(char const *s, char c, int *error)
 	dst[j] = NULL;
 	return (dst);
 }
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to print the result of ft_split
+void print_split_result(char **result) {
+    int i = 0;
+    if (!result) {
+        printf("ft_split returned NULL\n");
+        return;
+    }
+    while (i < 4) {
+        printf("Segment %d: \"%p\"\n", i, result[i]);
+        i++;
+    }
+    printf("Total segments: %d\n", i);
+}
+
+// Function to free the memory allocated by ft_split
+void free_split_result(char **result) {
+    int i = 0;
+    if (!result)
+        return;
+    while (result[i]) {
+        free(result[i]);
+        i++;
+    }
+    free(result);
+}
+
+int main(void) {
+    // Test case for empty string
+    char *test = "";
+
+
+    printf("Test: Splitting \"%s\" by ','\n", test);
+    char **result = ft_split(test, ',', &error);
+    print_split_result(result);
+    free_split_result(result);
+
+    return 0;
+}
+

@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:49:12 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/07 22:50:13 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/10 19:40:03 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,41 @@
 # define FORK	"Fork"
 # define PIPE	"Pipe"
 # define EXECVE	"Execve"
+# define MALLOC	"Memory allocation failure"
 
-# define FATAL	1
-# define NON_FATAL	0
+# define LEFT	0
+# define RIGHT	1
 
-typedef struct	s_pipe_side {
-	int fd;
-	char **cmd;
-	char *path;
+typedef struct s_side
+{
+	int		fd;
+	char	**cmd;
+	char	*path;
 	pid_t	pid;
-	int is_valid;
-}	t_pipe_side;
+	int		error;
+	int		is_valid;
+}	t_side;
 
-void	close_free_left(t_pipe_side	*left);
-void	close_free_right(t_pipe_side	*right);
-void	pipe_fail(t_pipe_side	*left, t_pipe_side	*right);
-void	fork_fail(t_pipe_side	*left, t_pipe_side	*right, int *pipe_fd);
+// error handling
+void	close_free_left(t_side *left);
+void	close_free_right(t_side *right);
 void	close_fds(int fd1, int *fd2, int *fd3, int amount);
+void	print_error(int error, char ***arr1, const char *msg);
 void	exit_error(int error, char ***arr1, char **arr2, const char *msg);
-char	*find_path(char **cmd, char **envp);
+
+// failures
+void	open_fail(t_side *left, char **av, int side);
+void	pipe_fail(t_side *left, t_side *right);
+void	fork_fail(t_side *left, t_side *right, int *pipe_fd);
+void	split_fail(t_side *left, t_side *right, int error, int side);
+void	path_fail(t_side *left, t_side *right, int side);
+
+// init
+void	init_all(t_side *left, t_side *right, int *pipe_fd);
+void	init_left_side(t_side *left, char **av, char **envp);
+void	init_right_side(t_side *right, t_side *left, char **av, char **envp);
+
+// utils
+char	*find_path(char **cmd, char **envp, int *error);
 
 #endif
