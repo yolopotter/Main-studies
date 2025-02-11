@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:10 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/11 17:07:30 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/11 22:00:12 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,12 @@ int	main(int ac, char **av, char **envp)
 		exit_error(1, NULL, NULL, AC2);
 	init_all(&left, &right, pipe_fd);
 	init_left_side(&left, av, envp);
-	init_right_side(&left, &right, av, envp);
 	if (pipe(pipe_fd) == -1)
 		pipe_fail(&left, &right);
 	if (left.is_valid)
 		child_process1(&left, &right, pipe_fd, envp);
 	waitpid(left.pid, NULL, 0);
+	init_right_side(&left, &right, av, envp);
 	child_process2(&left, &right, pipe_fd, envp);
 	parent_process(&left, &right, pipe_fd);
 	return (0);
