@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:10 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/10 19:31:12 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/11 17:07:30 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,9 @@ void	parent_process(t_side *left, t_side *right, int *pipe_fd)
 	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
 		exit(WEXITSTATUS(status));
 }
+
+//to fix: make child1 run even if path is not found OR file open fails. Only dont run execve when "".
+//Any other input into execve should be fine. perror will print correct error after fail inside execve
 
 int	main(int ac, char **av, char **envp)
 {
