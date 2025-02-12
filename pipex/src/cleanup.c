@@ -6,13 +6,13 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 18:35:07 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/10 19:27:33 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/12 16:35:09 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/pipex.h"
 
-void	close_fds(int fd1, int *fd2, int *fd3, int amount)
+void	close_fds(int *fd1, int *fd2, int *fd3, int amount)
 {
 	int	i;
 
@@ -32,16 +32,16 @@ void	close_fds(int fd1, int *fd2, int *fd3, int amount)
 		fd2[i] = -1;
 		i++;
 	}
-	if (fd1 != -1)
+	if (fd1 && (*fd1) != -1)
 	{
-		close(fd1);
-		fd1 = -1;
+		close(*fd1);
+		*fd1 = -1;
 	}
 }
 
 void	close_free_left(t_side	*left)
 {
-	close_fds(left->fd, NULL, NULL, 0);
+	close_fds(&(left->fd), NULL, NULL, 0);
 	left->fd = -1;
 	ft_free_split(left->cmd);
 	left->cmd = NULL;
@@ -51,7 +51,7 @@ void	close_free_left(t_side	*left)
 
 void	close_free_right(t_side	*right)
 {
-	close_fds(right->fd, NULL, NULL, 0);
+	close_fds(&(right->fd), NULL, NULL, 0);
 	right->fd = -1;
 	ft_free_split(right->cmd);
 	right->cmd = NULL;
