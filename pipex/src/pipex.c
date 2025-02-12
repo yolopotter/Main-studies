@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:10 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/12 12:12:30 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/12 12:58:07 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	child_process1(t_side *left, t_side *right, int *pipe_fd, char **envp)
 		close_fds(left->fd, NULL, NULL, 0);
 		close_fds(pipe_fd[1], NULL, NULL, 0);
 		execve(left->path, left->cmd, envp);
-			// exit_error(6, &(left->cmd), &(left->path), EXECVE);
+		write(2, "A\n", 2);
+		exit_error(6, &(left->cmd), &(left->path), EXECVE);
 	}
 }
 
@@ -52,6 +53,7 @@ void	parent_process(t_side *left, t_side *right, int *pipe_fd)
 {
 	int	status;
 
+	status = 0;
 	close_fds(-1, pipe_fd, NULL, 2);
 	waitpid(left->pid, NULL, 0);
 	waitpid(right->pid, &status, 0);
@@ -74,7 +76,6 @@ int	main(int ac, char **av, char **envp)
 	init_left_side(&left, av, envp);
 	if (pipe(pipe_fd) == -1)
 		pipe_fail(&left, &right);
-	// printf("left.is_valid %i\n", left.is_valid);
 	if (left.is_valid)
 	{
 		child_process1(&left, &right, pipe_fd, envp);
@@ -82,7 +83,7 @@ int	main(int ac, char **av, char **envp)
 	}
 	else
 		dup2(left.fd, STDIN_FILENO);
-	init_right_side(&left, &right, av, envp);
+	init_right_side(&left, &right, av, envp, pipe_fd);
 	child_process2(&left, &right, pipe_fd, envp);
 	parent_process(&left, &right, pipe_fd);
 	return (0);

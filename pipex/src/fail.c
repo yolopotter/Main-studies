@@ -6,13 +6,13 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 18:20:36 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/12 11:57:11 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/12 12:20:33 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/pipex.h"
 
-void	path_fail(t_side	*left, t_side	*right, int side)
+void	path_fail(t_side *left, t_side *right, int side)
 {
 	if (side == LEFT)
 	{
@@ -34,7 +34,7 @@ void	path_fail(t_side	*left, t_side	*right, int side)
 	}
 }
 
-void	split_fail(t_side	*left, t_side	*right, int error, int side)
+void	split_fail(t_side *left, t_side *right, int error, int side)
 {
 	if (side == LEFT)
 	{
@@ -53,7 +53,7 @@ void	split_fail(t_side	*left, t_side	*right, int error, int side)
 	}
 }
 
-void	open_fail(t_side	*left, char **av, int side)
+void	open_fail(t_side *left, char **av, int side)
 {
 	if (side == LEFT)
 		print_error(14, NULL, av[1]);
@@ -64,14 +64,14 @@ void	open_fail(t_side	*left, char **av, int side)
 	}
 }
 
-void	pipe_fail(t_side	*left, t_side	*right)
+void	pipe_fail(t_side *left, t_side *right)
 {
 	close_free_left(left);
 	close_free_right(right);
 	exit_error(2, NULL, NULL, PIPE);
 }
 
-void	fork_fail(t_side	*left, t_side	*right, int *pipe_fd)
+void	fork_fail(t_side *left, t_side *right, int *pipe_fd)
 {
 	close_fds(-1, NULL, pipe_fd, 2);
 	close_free_left(left);

@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 18:31:46 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/10 19:31:44 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/12 12:59:58 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,24 @@ void	init_left_side(t_side *left, char **av, char **envp)
 	left->is_valid = 1;
 }
 
-void	init_right_side(t_side *left, t_side *right, char **av, char **envp)
+void	init_right_side(t_side *left, t_side *right, char **av, char **envp, int *pipe_fd)
 {
 	right->fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (right->fd == -1)
+	{
+		close_fds(-1, pipe_fd, NULL, 2);
 		open_fail(left, av, RIGHT);
+	}
 	right->cmd = ft_split(av[3], ' ', &(right->error));
 	if (!right->cmd || !right->cmd[0])
+	{
+		close_fds(-1, pipe_fd, NULL, 2);
 		split_fail(left, right, right->error, RIGHT);
+	}
 	right->path = find_path(right->cmd, envp, &(right->error));
 	if (!right->path)
+	{
+		close_fds(-1, pipe_fd, NULL, 2);
 		path_fail(left, right, RIGHT);
+	}
 }

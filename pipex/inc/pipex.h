@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:49:12 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/10 19:40:03 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/12 12:58:37 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	path_fail(t_side *left, t_side *right, int side);
 // init
 void	init_all(t_side *left, t_side *right, int *pipe_fd);
 void	init_left_side(t_side *left, char **av, char **envp);
-void	init_right_side(t_side *right, t_side *left, char **av, char **envp);
+void	init_right_side(t_side *left, t_side *right, char **av, char **envp, int *pipe_fd);
 
 // utils
 char	*find_path(char **cmd, char **envp, int *error);
