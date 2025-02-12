@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:10 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/12 11:22:47 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/12 12:12:30 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	child_process1(t_side *left, t_side *right, int *pipe_fd, char **envp)
 	{
 		close_fds(pipe_fd[0], NULL, NULL, 0);
 		close_fds(right->fd, NULL, NULL, 0);
-		// dup2(left->fd, STDIN_FILENO);
+		dup2(left->fd, STDIN_FILENO);
 		dup2(pipe_fd[1], STDOUT_FILENO);
 		close_fds(left->fd, NULL, NULL, 0);
 		close_fds(pipe_fd[1], NULL, NULL, 0);
@@ -44,7 +44,7 @@ void	child_process2(t_side *left, t_side *right, int *pipe_fd, char **envp)
 		close_fds(pipe_fd[0], NULL, NULL, 0);
 		close_fds(right->fd, NULL, NULL, 0);
 		execve(right->path, right->cmd, envp);
-			// exit_error(6, &(right->cmd), &(right->path), EXECVE);
+		exit_error(6, &(right->cmd), &(right->path), EXECVE);
 	}
 }
 
@@ -53,19 +53,13 @@ void	parent_process(t_side *left, t_side *right, int *pipe_fd)
 	int	status;
 
 	close_fds(-1, pipe_fd, NULL, 2);
+	waitpid(left->pid, NULL, 0);
+	waitpid(right->pid, &status, 0);
 	close_free_left(left);
 	close_free_right(right);
-	waitpid(right->pid, &status, 0);
 	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
 		exit(WEXITSTATUS(status));
 }
-
-//to fix: make child1 run even if path is not found OR file open fails. Only dont run execve when "".
-//Any other input into execve should be fine. perror will print correct error after fail inside execve
-
-//Issue currently:
-// % ./pipex file5 "cat" "sad" file9
-//pipex: Command not found: sad
 
 
 int	main(int ac, char **av, char **envp)
