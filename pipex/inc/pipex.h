@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:49:12 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/12 16:13:29 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/13 14:34:40 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # define AC2	"Usage: ./pipex file1 cmd1 cmd2 file2"
 # define PATH	"Command not found: "
 # define PATH1	"Permission denied:"
+# define FILE	"No such file or directory: "
+# define DIR	"Is a directory"
 # define FORK	"Fork"
 # define PIPE	"Pipe"
 # define EXECVE	"Execve"
@@ -49,7 +51,8 @@ void	close_free_left(t_side *left);
 void	close_free_right(t_side *right);
 void	close_fds(int *fd1, int *fd2, int *fd3, int amount);
 void	print_error(int error, char ***arr1, const char *msg);
-void	exit_error(int error, char ***arr1, char **arr2, const char *msg);
+void	exit_error(int error, char ***arr1, const char *msg);
+void	exit_error_3(int error, char ***arr1, t_side *left, t_side *right);
 
 // failures
 void	open_fail(t_side *left, t_side *right, char **av, int side);

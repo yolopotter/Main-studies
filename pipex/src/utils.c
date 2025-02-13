@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:00 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/10 19:24:48 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/13 16:02:33 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,12 @@ static int	find_line(char **envp)
 	return (i);
 }
 
-char	*find_path(char **cmd, char **envp, int *error)
+char	*get_path(char **cmd, char **paths)
 {
 	int		i;
-	char	**paths;
 	char	*exec;
 	char	*current_path;
 
-	i = find_line(envp);
-	if (access(cmd[0], F_OK | X_OK) == 0)
-		return (ft_strdup(cmd[0]));
-	paths = ft_split(envp[i] + 5, ':', error);
 	i = 0;
 	while (paths[i])
 	{
@@ -51,6 +46,24 @@ char	*find_path(char **cmd, char **envp, int *error)
 		free(exec);
 		exec = NULL;
 	}
+	return (NULL);
+}
+
+char	*find_path(char **cmd, char **envp, int *error)
+{
+	int		i;
+	char	**paths;
+	char	*exec;
+
+	i = find_line(envp);
+	if (access(cmd[0], F_OK | X_OK) == 0)
+		return (ft_strdup(cmd[0]));
+	if (ft_strchr(cmd[0], '/'))
+		return (*error = 2, NULL);
+	paths = ft_split(envp[i] + 5, ':', error);
+	exec = get_path(cmd, paths);
+	if (exec)
+		return (exec);
 	ft_free_split(paths);
 	return (NULL);
 }
