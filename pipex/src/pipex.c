@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:10 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/14 15:30:45 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/14 17:08:04 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,14 @@ static void	child_process1(t_side *left, t_side *right, char **envp)
 	}
 }
 
-static void	child_process2(t_side *left, t_side *right, char **envp)
+static void	child_process2(t_side *left, t_side *right, char **av, char **envp)
 {
 	right->pid = fork();
 	if (right->pid == -1)
 		fork_fail(left, right);
 	if (right->pid == 0)
 	{
-
+		init_right_side(left, right, av, envp);
 		close_fds(&(right->pipe_fd[1]), NULL, NULL, 0);
 		close_fds(&(left->fd), NULL, NULL, 0);
 		dup2(right->pipe_fd[0], STDIN_FILENO);
@@ -55,15 +55,15 @@ static void	parent_process(t_side *left, t_side *right)
 
 	status = 0;
 	close_fds(NULL, right->pipe_fd, NULL, 2);
-	waitpid(left->pid, NULL, 0);
+	if (left->pid > 0)
+		waitpid(left->pid, NULL, 0);
 	waitpid(right->pid, &status, 0);
 	close_free_left(left);
 	close_free_right(right);
-	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+	if (WIFEXITED(status))
 		exit(WEXITSTATUS(status));
+	exit(1);
 }
-
-// sleep on left-hand side should work even if right side is wrong
 
 int	main(int ac, char **av, char **envp)
 {
@@ -84,8 +84,6 @@ int	main(int ac, char **av, char **envp)
 	}
 	else if (left.fd != -1)
 		dup2(left.fd, STDIN_FILENO);
-	init_right_side(&left, &right, av, envp);
-	child_process2(&left, &right, envp);
+	child_process2(&left, &right, av, envp);
 	parent_process(&left, &right);
-	return (0);
 }

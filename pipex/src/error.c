@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 17:27:28 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/14 10:33:00 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/14 17:08:09 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static void	exit_error_2(int error, const char *msg)
 		exit(127);
 	}
 }
-
+#include <errno.h>
 void	exit_error_3(int error, char ***arr1, t_side *left, t_side *right)
 {
 	ft_putstr_fd(PIPEX, 2);
@@ -84,8 +84,7 @@ void	exit_error_3(int error, char ***arr1, t_side *left, t_side *right)
 	{
 		ft_putstr_fd((*arr1)[0], 2);
 		ft_putstr_fd(": ", 2);
-		if (ft_strrchr((*arr1)[0], '/') ==
-			&((*arr1)[0][ft_strlen((*arr1)[0]) - 1]))
+		if (ft_strrchr((*arr1)[0], '/') == &((*arr1)[0][ft_strlen((*arr1)[0]) - 1]))
 		{
 			close_free_left(left);
 			close_free_right(right);
