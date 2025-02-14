@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 17:27:28 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/13 16:02:16 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/14 10:33:00 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ static void	exit_error_1(int error, char ***arr1, const char *msg)
 		exit (127);
 	}
 }
-
 static void	exit_error_2(int error, const char *msg)
 {
 	ft_putstr_fd(PIPEX, 2);

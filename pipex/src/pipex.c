@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:10 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/13 16:12:45 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/14 15:30:45 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static void	child_process2(t_side *left, t_side *right, char **envp)
 		fork_fail(left, right);
 	if (right->pid == 0)
 	{
+
 		close_fds(&(right->pipe_fd[1]), NULL, NULL, 0);
 		close_fds(&(left->fd), NULL, NULL, 0);
 		dup2(right->pipe_fd[0], STDIN_FILENO);
@@ -62,7 +63,7 @@ static void	parent_process(t_side *left, t_side *right)
 		exit(WEXITSTATUS(status));
 }
 
-// check for leaks when pipe fails, fork fails,
+// sleep on left-hand side should work even if right side is wrong
 
 int	main(int ac, char **av, char **envp)
 {
@@ -78,6 +79,7 @@ int	main(int ac, char **av, char **envp)
 	if (left.is_valid)
 	{
 		child_process1(&left, &right, envp);
+		close_fds(&(right.pipe_fd[1]), NULL, NULL, 2);
 		waitpid(left.pid, NULL, WNOHANG);
 	}
 	else if (left.fd != -1)
