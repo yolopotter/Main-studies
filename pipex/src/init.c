@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 18:31:46 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/14 16:00:25 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/17 11:51:08 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,17 @@ void	init_left_side(t_side *left, char **av, char **envp)
 {
 	left->fd = open(av[1], O_RDONLY);
 	if (left->fd == -1)
-	{
-		open_fail(left, NULL, av, LEFT);
-		return ;
-	}
+		return (open_fail(left, NULL, av, LEFT), (void)0);
 	left->cmd = ft_split(av[2], ' ', &(left->error));
-	if (!left->cmd || !left->cmd[0])
-	{
-		split_fail(left, NULL, left->error, LEFT);
-		return ;
-	}
+	if (!left->cmd && left->error == 1)
+		return (split_fail(left, NULL, 1, LEFT), (void)0);
+	else if (!left->cmd[0] && av[2][0] == '\0')
+		return (split_fail(left, NULL, 2, LEFT), (void)0);
+	else if (!left->cmd[0])
+		return (split_fail(left, NULL, 3, LEFT), (void)0);
 	left->path = find_path(left->cmd, envp, &(left->error));
 	if (!left->path)
-	{
-		path_fail(left, NULL, LEFT);
-		return ;
-	}
+		return (path_fail(left, NULL, LEFT), (void)0);
 	left->is_valid = 1;
 }
 
@@ -61,8 +56,12 @@ void	init_right_side(t_side *left, t_side *right, char **av, char **envp)
 	if (right->fd == -1)
 		open_fail(left, right, av, RIGHT);
 	right->cmd = ft_split(av[3], ' ', &(right->error));
-	if (!right->cmd || !right->cmd[0])
-		split_fail(left, right, right->error, RIGHT);
+	if (!right->cmd && right->error == 1)
+		split_fail(left, right, 1, RIGHT);
+	else if (!right->cmd[0] && av[3][0] == '\0')
+		split_fail(left, right, 2, RIGHT);
+	else if (!right->cmd[0])
+		split_fail(left, right, 3, RIGHT);
 	right->path = find_path(right->cmd, envp, &(right->error));
 	if (!right->path)
 		path_fail(left, right, RIGHT);

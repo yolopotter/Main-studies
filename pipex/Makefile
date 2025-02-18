@@ -5,11 +5,13 @@ CFLAGS		= -Wextra -Wall -Werror
 LIBFT_DIR 	= ./libft
 LIBFT 		= $(LIBFT_DIR)/libft.a
 
-
 OBJ_DIR		= obj/
 SRC_DIR		= src/
 
 HEADERS		= -I ./inc -I $(LIBFT_DIR)/inc
+
+LIBFTH		= ./libft/inc/libft.h
+PIPEXH		= ./inc/pipex.h
 
 SRC			=	pipex.c \
 				utils.c \
@@ -25,11 +27,11 @@ all: $(NAME)
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c $(PIPEXH) $(LIBFTH)
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
 
-$(NAME): $(LIBFT) $(OBJS)
+$(NAME): $(LIBFT) $(OBJS) $(PIPEXH) $(LIBFTH)
 	@$(CC) $(OBJS) $(LIBFT) $(HEADERS) -o $(NAME)
 
 clean:

@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:00 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/14 15:54:36 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:45:29 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ static int	find_line(char **envp)
 	int	i;
 
 	i = 0;
-	while (*envp[i])
+	while (envp[i])
 	{
 		if (ft_strncmp("PATH", envp[i], 4) == 0)
-			break ;
+			return (i);
 		i++;
 	}
-	return (i);
+	return (-1);
 }
 
 char	*get_path(char **cmd, char **paths)
@@ -51,16 +51,16 @@ char	*get_path(char **cmd, char **paths)
 
 char	*find_path(char **cmd, char **envp, int *error)
 {
-	int		i;
 	char	**paths;
 	char	*exec;
 
-	i = find_line(envp);
 	if (access(cmd[0], F_OK | X_OK) == 0)
 		return (ft_strdup(cmd[0]));
+	if (find_line(envp) == -1)
+		return (NULL);
 	if (ft_strchr(cmd[0], '/'))
 		return (*error = 2, NULL);
-	paths = ft_split(envp[i] + 5, ':', error);
+	paths = ft_split(envp[find_line(envp)] + 5, ':', error);
 	exec = get_path(cmd, paths);
 	if (exec)
 		return (exec);

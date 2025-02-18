@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:10 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/14 17:08:04 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:50:10 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	child_process1(t_side *left, t_side *right, char **envp)
 		close_fds(&(left->fd), NULL, NULL, 0);
 		close_fds(&(right->pipe_fd[1]), NULL, NULL, 0);
 		execve(left->path, left->cmd, envp);
-		exit_error_3(6, &(left->cmd), left, right);
+		exit_error_3(7, &(left->cmd), left, right);
 	}
 }
 
@@ -45,23 +45,31 @@ static void	child_process2(t_side *left, t_side *right, char **av, char **envp)
 		close_fds(&(right->pipe_fd[0]), NULL, NULL, 0);
 		close_fds(&(right->fd), NULL, NULL, 0);
 		execve(right->path, right->cmd, envp);
-		exit_error_3(6, &(right->cmd), left, right);
+		exit_error_3(7, &(right->cmd), left, right);
 	}
 }
 
 static void	parent_process(t_side *left, t_side *right)
 {
-	int	status;
+	int		status;
+	int		last_status;
+	int		pids_to_wait;
+	pid_t	pid;
 
+	pids_to_wait = 2;
 	status = 0;
 	close_fds(NULL, right->pipe_fd, NULL, 2);
-	if (left->pid > 0)
-		waitpid(left->pid, NULL, 0);
-	waitpid(right->pid, &status, 0);
+	while (pids_to_wait > 0)
+	{
+		pid = wait(&status);
+		pids_to_wait--;
+		if (pid == right->pid)
+			last_status = status;
+	}
 	close_free_left(left);
 	close_free_right(right);
-	if (WIFEXITED(status))
-		exit(WEXITSTATUS(status));
+	if (WIFEXITED(last_status))
+		exit(WEXITSTATUS(last_status));
 	exit(1);
 }
 

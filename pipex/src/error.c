@@ -6,12 +6,11 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 17:27:28 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/14 17:08:09 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:36:50 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/pipex.h"
-#include <errno.h>
 
 // 13:	command not found error
 // 14:	file opening error
@@ -32,7 +31,7 @@ void	print_error(int error, char ***arr1, const char *msg)
 		perror(NULL);
 	}
 	if (error == 15)
-		ft_putendl_fd(PATH1, 2);
+		ft_putendl_fd((char *)msg, 2);
 }
 
 // 1:	amount of argument error
@@ -61,6 +60,7 @@ static void	exit_error_1(int error, char ***arr1, const char *msg)
 		exit (127);
 	}
 }
+
 static void	exit_error_2(int error, const char *msg)
 {
 	ft_putstr_fd(PIPEX, 2);
@@ -72,19 +72,25 @@ static void	exit_error_2(int error, const char *msg)
 	}
 	if (error == 5)
 	{
-		ft_putendl_fd(PATH1, 2);
+		ft_putendl_fd((char *)msg, 2);
+		exit(126);
+	}
+	if (error == 6)
+	{
+		ft_putendl_fd((char *)msg, 2);
 		exit(127);
 	}
 }
-#include <errno.h>
+
 void	exit_error_3(int error, char ***arr1, t_side *left, t_side *right)
 {
 	ft_putstr_fd(PIPEX, 2);
-	if (error == 6)
+	if (error == 7)
 	{
 		ft_putstr_fd((*arr1)[0], 2);
 		ft_putstr_fd(": ", 2);
-		if (ft_strrchr((*arr1)[0], '/') == &((*arr1)[0][ft_strlen((*arr1)[0]) - 1]))
+		if (ft_strrchr((*arr1)[0], '/') ==
+			&((*arr1)[0][ft_strlen((*arr1)[0]) - 1]))
 		{
 			close_free_left(left);
 			close_free_right(right);
@@ -105,7 +111,7 @@ void	exit_error(int error, char ***arr1, const char *msg)
 {
 	if (error >= 1 && error <= 3)
 		exit_error_1(error, arr1, msg);
-	if (error >= 4 && error <= 5)
+	if (error >= 4 && error <= 6)
 		exit_error_2(error, msg);
 	exit(1);
 }

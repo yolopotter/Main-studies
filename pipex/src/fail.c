@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 18:20:36 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/14 16:00:44 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/17 12:03:38 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,24 @@ void	split_fail(t_side *left, t_side *right, int error, int side)
 	if (side == LEFT)
 	{
 		close_fds(&(left->fd), NULL, NULL, 0);
-		if (error)
+		if (error == 1)
 			exit_error(4, NULL, MALLOC);
-		print_error(15, NULL, NULL);
+		if (error == 2)
+			print_error(15, NULL, PATH1);
+		if (error == 3)
+			print_error(15, NULL, PATH);
 	}
 	if (side == RIGHT)
 	{
 		close_fds(NULL, right->pipe_fd, NULL, 2);
 		close_free_left(left);
 		close_free_right(right);
-		if (error)
+		if (error == 1)
 			exit_error(4, NULL, MALLOC);
-		exit_error(5, NULL, NULL);
+		if (error == 2)
+			exit_error(5, NULL, PATH1);
+		if (error == 3)
+			exit_error(6, NULL, PATH);
 	}
 }
 
