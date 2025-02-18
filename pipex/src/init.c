@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 18:31:46 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/17 11:51:08 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/18 14:23:06 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	init_left_side(t_side *left, char **av, char **envp)
 
 void	init_right_side(t_side *left, t_side *right, char **av, char **envp)
 {
-	right->fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	right->fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (right->fd == -1)
 		open_fail(left, right, av, RIGHT);
 	right->cmd = ft_split(av[3], ' ', &(right->error));
