@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:39:19 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/18 13:51:00 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/18 17:20:44 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,13 @@
 # define ARGS1	"Incorrect amount of arguments\n"
 # define ARGS2	"Usage: ./philo [number_of_philosophers] [time_to_die] [time_to_eat] "
 # define ARGS3	"[time_to_sleep] ([number_of_times_each_philosopher_must_eat])\n"
+
+typedef struct s_thread_data
+{
+	int id;
+	int *should_continue;
+	int starting_process;
+}	t_thread_data;
 
 void	exit_error(int error, const char *msg);
 
