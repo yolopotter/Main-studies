@@ -16,3 +16,6 @@ operators. Trick is come up with most efficient algorithm, since amount of opera
 <h3 align="center">FDF</h3>
 Fil de Fer is graphical project where MLX42 library is utilized. Idea is to represent given elevation map graphically with element-mesh.
 Interaction with the drawn map is also added with help of hooks. Basic interaction is possible like rotation, zoom, translation and z-axis scaling.
+<h3 align="center">Pipex</h3>
+Idea in Pipex is to recreate behaviour of pipe functionality from shell. Consepts like pipe between processes, 
+forking, exit statuses, execution of existing scipts/programs and control of program in main process were here to be learned.
