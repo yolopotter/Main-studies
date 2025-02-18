@@ -13,3 +13,6 @@ such as firewall and SSH.
 <h3 align="center">Push Swap</h3>
 Push swap is dive into algorithms world. Idea is to sort number with help of two stacks and defined manipulation
 operators. Trick is come up with most efficient algorithm, since amount of operations is tracked.
+<h3 align="center">FDF</h3>
+Fil de Fer is graphical project where MLX42 library is utilized. Idea is to represent given elevation map graphically with element-mesh.
+Interaction with the drawn map is also added with help of hooks. Basic interaction is possible like rotation, zoom, translation and z-axis scaling.
