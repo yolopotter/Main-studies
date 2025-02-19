@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:39:19 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/19 11:24:54 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/19 14:04:38 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ typedef struct s_thread_data
 	int id;
 	int *should_continue;
 	int starting_process;
+	struct timeval start;
+	struct timeval current;
 	pthread_mutex_t *eating_mutex;
 }	t_thread_data;
 
