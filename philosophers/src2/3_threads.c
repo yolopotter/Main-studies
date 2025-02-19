@@ -1,36 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   3_threads.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:41:06 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/19 13:48:00 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:50:49 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 #include <unistd.h>
 
-void	process1(t_thread_data *data)
+void	process1(int id)
 {
-	pthread_mutex_lock(data->eating_mutex);
-	printf(GREEN "Started Eating, I am thread %i\n" RESET, data->id);
+	printf("Eating, I am thread %i\n", id);
 	usleep (1000000);
-	pthread_mutex_unlock(data->eating_mutex);
-	printf(BLUE "Finished Eating, I am thread %i\n" RESET, data->id);
 }
 
 void	process2(int id)
 {
 	printf("Sleeping, I am thread %i\n", id);
-	usleep (800000);
+	usleep (1500000);
 }
 
 void	process3(int id)
 {
 	printf("Thinking, I am thread %i\n", id);
+	usleep (2400000);
 }
 
 void	*thread_routine(void *arg)
@@ -41,7 +39,7 @@ void	*thread_routine(void *arg)
 	{
 		if (current_process == 1)
 		{
-			process1(data);
+			process1(data->id);
 			current_process = 2;
 		}
 		if (current_process == 2)
@@ -58,16 +56,15 @@ void	*thread_routine(void *arg)
 	return NULL;
 }
 
-int	init_threads()
+int	main(int ac, char **av)
 {
-	t_thread_data thread_data[3];
+	// if (ac != 5 && ac != 6)
+		// exit_error(1, NULL);
+	(void)ac;
+	(void)av;
 
-	pthread_mutex_t eating_mutex;
-	if (pthread_mutex_init(&eating_mutex, NULL) != 0)
-	{
-		perror("pthread_mutex_init");
-		return 1;
-	}
+	// pthread_t threads[3];
+	t_thread_data thread_data[3];
 	int should_continue = 1;
 
 	pthread_t thread1;
@@ -82,10 +79,6 @@ int	init_threads()
 	thread_data[1].should_continue = &should_continue;
 	thread_data[2].should_continue = &should_continue;
 
-	thread_data[0].eating_mutex = &eating_mutex;
-	thread_data[1].eating_mutex = &eating_mutex;
-	thread_data[2].eating_mutex = &eating_mutex;
-
 	thread_data[0].starting_process = 1;
 	thread_data[1].starting_process = 2;
 	thread_data[2].starting_process = 3;
@@ -95,32 +88,9 @@ int	init_threads()
 	pthread_create(&thread3, NULL, thread_routine, &thread_data[2]);
 
 	sleep(10);
-
 	should_continue = 0;
 	pthread_join(thread1, NULL);
 	pthread_join(thread2, NULL);
 	pthread_join(thread3, NULL);
-
-	return 0;
-}
-
-int	main(int ac, char **av)
-{
-	// if (ac != 5 && ac != 6)
-		// exit_error(1, NULL);
-	(void)ac;
-	(void)av;
-
-	// pthread_t threads[3];
-
-
-	struct timeval start;
-	struct timeval end;
-	gettimeofday(&start, NULL);
-	gettimeofday(&end, NULL);
-
-	init_threads();
-
 	return (0);
 }
-
