@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:41:06 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/19 16:06:19 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/19 16:20:43 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,8 @@ int	init_threads()
 
 	return 0;
 }
+
+// change timestamps: init starting time beforehand and then every time timestamp needed call get_current_time fucntion.
 
 int	main(int ac, char **av)
 {
