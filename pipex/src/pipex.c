@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:10 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/18 10:50:10 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/20 10:39:50 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ int	main(int ac, char **av, char **envp)
 	{
 		child_process1(&left, &right, envp);
 		close_fds(&(right.pipe_fd[1]), NULL, NULL, 2);
-		waitpid(left.pid, NULL, WNOHANG);
 	}
 	else if (left.fd != -1)
 		dup2(left.fd, STDIN_FILENO);

@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 10:44:00 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/18 11:45:29 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/21 16:20:14 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ char	*find_path(char **cmd, char **envp, int *error)
 	if (ft_strchr(cmd[0], '/'))
 		return (*error = 2, NULL);
 	paths = ft_split(envp[find_line(envp)] + 5, ':', error);
+	if (!paths)
+		return (NULL);
 	exec = get_path(cmd, paths);
 	if (exec)
 		return (exec);

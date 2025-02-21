@@ -6,7 +6,7 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:49:12 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/18 12:21:49 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/20 11:23:18 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <unistd.h> //execve, fork
 # include <fcntl.h> //pid_t
 # include <stdio.h> //perror
-# include <sys/wait.h> //waitpid
+# include <sys/wait.h> //wait
 
 # define PIPEX	"pipex: "
 # define AC1	"Incorrect amount of arguments"
@@ -26,10 +26,8 @@
 # define PATH	"Command not found: "
 # define PATH1	"Permission denied:"
 # define FILE	"No such file or directory: "
-# define DIR	"Is a directory"
 # define FORK	"Fork"
 # define PIPE	"Pipe"
-# define EXECVE	"Execve"
 # define MALLOC	"Memory allocation failure"
 
 # define LEFT	0
