@@ -6,65 +6,64 @@
 /*   By: vlopatin <vlopatin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 14:41:06 by vlopatin          #+#    #+#             */
-/*   Updated: 2025/02/20 16:07:00 by vlopatin         ###   ########.fr       */
+/*   Updated: 2025/02/21 14:51:47 by vlopatin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-void	eating(t_thread_data *data)
+void	msg_broadcast(t_philo *philo, char *msg)
 {
-	long int timestamp;
+	size_t timestamp;
 
-	pthread_mutex_lock(data->eating_lock);
-	data->current = get_current_time();
-	// printf("time current usec (eating): %li ms\n", data->current);
-	// printf("time start usec (eating): %li ms\n", data->start);
-	timestamp = (data->current - data->start);
-	printf(GREEN "%li ms %i started Eating\n" RESET, timestamp, data->id);
-	ft_asleep(1100);
-	pthread_mutex_unlock(data->eating_lock);
-	printf(BLUE "%li ms %i finished Eating\n" RESET, timestamp, data->id);
+	pthread_mutex_lock(philo->msg_lock);
+	timestamp = (get_current_time() - philo->start);
+	printf("%li ms %i %s\n", timestamp, philo->id, msg);
+	pthread_mutex_unlock(philo->msg_lock);
 }
 
-void	sleeping(t_thread_data *data)
+void	eating(t_philo *philo)
 {
-	long int timestamp;
-
-	data->current = get_current_time();
-	timestamp = (data->current - data->start);
-	printf("%li ms %i is sleeping\n", timestamp, data->id);
+	pthread_mutex_lock(philo->l_fork);
+	msg_broadcast(philo, FORK);
+	pthread_mutex_lock(philo->r_fork);
+	msg_broadcast(philo, FORK);
+	msg_broadcast(philo, EATING);
+	ft_asleep(1100);
+	pthread_mutex_unlock(philo->l_fork);
+	pthread_mutex_unlock(philo->r_fork);
+}
+ 
+void	sleeping(t_philo *philo)
+{
+	msg_broadcast(philo, SLEEPING);
 	ft_asleep(800);
 }
 
-void	thinking(t_thread_data *data)
+void	thinking(t_philo *philo)
 {
-	long int timestamp;
-
-	data->current = get_current_time();
-	timestamp = (data->current - data->start);
-	printf("%li ms %i is thinking\n", timestamp, data->id);
+	msg_broadcast(philo, THINKING);
 }
 
 void	*thread_routine(void *arg)
 {
-	t_thread_data *data = (t_thread_data *)arg;
-	int current_process = data->starting_process;
-	while (*(data->should_continue) == 1)
+	t_philo *philo = (t_philo *)arg;
+	int current_process = philo->starting_process;
+	while (*(philo->should_continue) == 1)
 	{
 		if (current_process == 1)
 		{
-			eating(data);
+			eating(philo);
 			current_process = 2;
 		}
 		if (current_process == 2)
 		{
-			sleeping(data);
+			sleeping(philo);
 			current_process = 3;
 		}
 		if (current_process == 3)
 		{
-			thinking(data);
+			thinking(philo);
 			current_process = 1;
 		}
 	}
@@ -73,71 +72,102 @@ void	*thread_routine(void *arg)
 
 // void	*monitor(void *ptr)
 // {
-// 	t_thread_data *observer;
+// 	t_philo *observer;
 
-// 	observer = (t_thread_data *)ptr;
+// 	observer = (t_philo *)ptr;
 // }
 
-void	init_time_and_send(pthread_t *threads, t_thread_data *thread_data)
+void	init_time_and_send(pthread_t *threads, t_philo *philo)
 {
 	int	i;
 
 	i = 0;
+	philo[i].start = get_current_time();
+	i++;
 	while (i < 3)
 	{
-		thread_data[i].start = get_current_time();
-		pthread_create(&threads[i], NULL, thread_routine, &thread_data[i]);
+		philo[i].start = philo[0].start;
+		i++;
+	}
+	i = 0;
+	while (i < 3)
+	{
+		pthread_create(&threads[i], NULL, thread_routine, &philo[i]);
 		i++;
 	}
 }
 
-void	init_philos(t_thread_data *thread_data, int amount, pthread_mutex_t *eating_lock, int *should_continue)
+void	init_philos(t_philo *philo, int amount, pthread_mutex_t *forks, int *should_continue, pthread_mutex_t *msg_lock)
 {
 	int	i;
 
 	i = 0;
 	while (i < amount)
 	{
-		thread_data[i].id = i;
-		thread_data[i].should_continue = should_continue;
-		thread_data[i].eating_lock = eating_lock;
-		thread_data[i].starting_process = i + 1;
+		philo[i].id = i;
+		philo[i].should_continue = should_continue;
+		philo[i].l_fork = &forks[i];
+		if (i != 0)
+			philo[i].r_fork = &forks[i - 1];
+		else
+			philo[i].r_fork = &forks[amount - 1];
+		philo[i].msg_lock = msg_lock;
+		philo[i].starting_process = i + 1;
+		i++;
+	}
+}
+
+void	init_forks(pthread_mutex_t *forks, int amount)
+{
+	int	i;
+
+	i = 0;
+	while (i < amount)
+	{
+		pthread_mutex_init(&forks[i], NULL);
+		i++;
+	}
+}
+
+void	destroy_forks(pthread_mutex_t *forks, int amount)
+{
+	int	i;
+
+	i = 0;
+	while (i < amount)
+	{
+		pthread_mutex_destroy(&forks[i]);
 		i++;
 	}
 }
 
 int	init_threads(int amount)
 {
-	t_thread_data	thread_data[amount];
+	t_philo			philo[amount];
 	pthread_t		threads[amount];
+	pthread_mutex_t	forks[amount];
+	t_global_data	globals;
 
-	pthread_mutex_t eating_lock;
-	if (pthread_mutex_init(&eating_lock, NULL) != 0)
-	{
-		perror("pthread_mutex_init");
-		return 1;
-	}
+	init_forks(forks, amount);
+	pthread_mutex_init(&globals.msg_lock, NULL);
+
 	int should_continue = 1;
-	init_philos(thread_data, amount, &eating_lock, &should_continue);
+	init_philos(philo, amount, forks, &should_continue, &globals.msg_lock);
 	// pthread_t observer;
-	int i = 0;
 
+	init_time_and_send(threads, philo);
 
-	init_time_and_send(threads, thread_data);
-	// pthread_create(&thread1, NULL, thread_routine, &thread_data[0]);
-	// pthread_create(&thread2, NULL, thread_routine, &thread_data[1]);
-	// pthread_create(&thread3, NULL, thread_routine, &thread_data[2]);
-
-	// pthread_create(&observer, NULL, &monitor, &thread_data[3]);
+	// pthread_create(&observer, NULL, &monitor, &philo[3]);
 
 	sleep(10);
 
 	should_continue = 0;
-	i = 0;
+	int i = 0;
 	while (i < amount)
 		pthread_join(threads[i++], NULL);
 
-	pthread_mutex_destroy(&eating_lock);
+	destroy_forks(forks, amount);
+	pthread_mutex_destroy(&globals.msg_lock);
 	return 0;
 }
 
@@ -147,9 +177,6 @@ int	main(int ac, char **av)
 		// exit_error(1, NULL);
 	(void)ac;
 	(void)av;
-
-	struct timeval start;
-	gettimeofday(&start, NULL);
 
 	init_threads(3);
 
